@@ -1,0 +1,28 @@
+Package: PrismR
+Type: Package
+Title: A Statistical Validation Framework for Model Readiness
+Version: 0.1.0
+Authors@R: c(
+    person(
+      given = "Arshit",
+      family = "Choudhary",
+      role = c("aut", "cre"),
+      email = "arshitchoudhary3010@gmail.com"
+    )
+  )
+Description: PrismR introduces a statistical validation layer between
+    data preprocessing and predictive modeling. It evaluates the
+    statistical readiness of tabular datasets through data quality
+    assessment, leakage detection, transformation analysis, and
+    feature stability.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    stats,
+    utils
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
