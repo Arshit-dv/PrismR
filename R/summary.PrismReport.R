@@ -5,7 +5,31 @@
 #'
 #' @export
 
-summary.PrismReport <- function(x, ...){
+summary.PrismReport <- function(object, ...) {
 
-  print(x);
+  print(object)
+
+  cat("\n")
+  cat("Quality Summary\n")
+  cat("-------------------------------------\n")
+
+  if (object$quality$quality_score >= 90) {
+
+    cat("Excellent dataset quality.\n")
+
+  } else if (object$quality$quality_score >= 75) {
+
+    cat("Good dataset quality with minor issues.\n")
+
+  } else if (object$quality$quality_score >= 60) {
+
+    cat("Moderate dataset quality. Review preprocessing.\n")
+
+  } else {
+
+    cat("Poor dataset quality. Significant preprocessing required.\n")
+
+  }
+
+  invisible(object)
 }

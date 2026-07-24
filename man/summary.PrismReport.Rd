@@ -4,12 +4,12 @@
 \alias{summary.PrismReport}
 \title{Summarize a PrismReport}
 \usage{
-\method{summary}{PrismReport}(x, ...)
+\method{summary}{PrismReport}(object, ...)
 }
 \arguments{
-\item{...}{Additional arguments.}
-
 \item{object}{A PrismReport object.}
+
+\item{...}{Additional arguments.}
 }
 \description{
 Summarize a PrismReport
