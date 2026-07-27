@@ -17,6 +17,8 @@ A named list containing:
 \item{constant_columns}{Names of constant columns.}
 \item{n_constant_columns}{Number of constant columns.}
 \item{quality_score}{Overall quality score (0–100).}
+\item{variables}{A data frame containing variable-level quality metrics,
+including missing percentage, constant feature indicator, and quality score.}
 }
 }
 \description{

@@ -30,6 +30,10 @@ Number of numeric variables analysed.
 \item{n_recommended}{
 Number of variables for which a transformation was recommended.
 }
+\item{variables}{
+A data frame containing variable-level transformation
+diagnostics and recommendations.
+}
 }
 }
 \description{

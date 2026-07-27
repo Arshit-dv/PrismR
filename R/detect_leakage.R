@@ -18,6 +18,11 @@
 #'   \item{target_leakage}{Names of predictors identical to the target variable.}
 #'   \item{correlation_leakage}{Numeric predictors with near-perfect correlation to the target.}
 #'   \item{leakage_score}{Overall leakage score ranging from 0 to 100.}
+#'   \item{variables}{
+#'   A data frame containing variable-level leakage diagnostics,
+#'   including identifier, duplicate, high-cardinality,
+#'   target leakage, correlation leakage, and leakage score.
+#'   }
 #' }
 #'
 #' @export
@@ -240,6 +245,47 @@ detect_leakage <- function(data, target = NULL) {
 
   leakage_score <- max(0, min(100, round(score, 1)))
 
+
+  # ==========================================================
+  # Variable-level Leakage Assessment
+  # ==========================================================
+  variable_metrics <- data.frame(
+    variable = names(data),
+    identifier = names(data) %in% identifier_columns,
+    duplicate = names(data) %in% duplicate_columns,
+    high_cardinality = names(data) %in% high_cardinality_columns,
+    target_leakage = names(data) %in% target_leakage,
+    correlation = names(data) %in% correlation_leakage,
+    stringsAsFactors = FALSE
+  )
+
+  # Per-variable leakage score
+  variable_metrics$leakage_score <- 100
+
+  variable_metrics$leakage_score <-
+    variable_metrics$leakage_score -
+    ifelse(variable_metrics$identifier, 25, 0)
+
+  variable_metrics$leakage_score <-
+    variable_metrics$leakage_score -
+    ifelse(variable_metrics$duplicate, 20, 0)
+
+  variable_metrics$leakage_score <-
+    variable_metrics$leakage_score -
+    ifelse(variable_metrics$high_cardinality, 20, 0)
+
+  variable_metrics$leakage_score <-
+    variable_metrics$leakage_score -
+    ifelse(variable_metrics$target_leakage, 20, 0)
+
+  variable_metrics$leakage_score <-
+    variable_metrics$leakage_score -
+    ifelse(variable_metrics$correlation, 15, 0)
+
+  variable_metrics$leakage_score <-
+    pmax(0, variable_metrics$leakage_score)
+
+
   # ==========================================================
   # Return Leakage Assessment
   # ==========================================================
@@ -249,7 +295,9 @@ detect_leakage <- function(data, target = NULL) {
     high_cardinality_columns = high_cardinality_columns,
     target_leakage = target_leakage,
     correlation_leakage = correlation_leakage,
-    leakage_score = leakage_score
+    leakage_score = leakage_score,
+
+    variables = variable_metrics
   )
 
 }

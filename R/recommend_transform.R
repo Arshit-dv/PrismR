@@ -43,6 +43,10 @@
 #'   \item{n_recommended}{
 #'   Number of variables for which a transformation was recommended.
 #'   }
+#'   \item{variables}{
+#'   A data frame containing variable-level transformation
+#'   diagnostics and recommendations.
+#'   }
 #' }
 #'
 #' @examples
@@ -370,6 +374,8 @@ recommend_transform <- function(data) {
   list(
     recommendations = recommendations,
     n_numeric = n_numeric,
-    n_recommended = n_recommended
+    n_recommended = n_recommended,
+
+    variables = recommendations
   )
 }

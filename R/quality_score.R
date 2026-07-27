@@ -13,6 +13,8 @@
 #'   \item{constant_columns}{Names of constant columns.}
 #'   \item{n_constant_columns}{Number of constant columns.}
 #'   \item{quality_score}{Overall quality score (0–100).}
+#'   \item{variables}{A data frame containing variable-level quality metrics,
+#'   including missing percentage, constant feature indicator, and quality score.}
 #' }
 #'
 #' @export
@@ -137,6 +139,32 @@ quality_score <- function(data) {
 
   score <- max(0, min(100, round(score, 1)))
 
+
+  # ==========================================================
+  # Variable-level Quality Assessment
+  # ==========================================================
+  variable_metrics <- data.frame(
+    variable = names(data),
+    missing_percent = sapply(data, function(x) {
+      round(mean(is.na(x)) * 100, 2)
+    }),
+    constant = sapply(data, function(x) {
+      x <- x[!is.na(x)]
+      length(unique(x)) <= 1
+    }),
+    stringsAsFactors = FALSE
+  )
+
+  # Simple per-variable quality score
+  variable_metrics$quality_score <-
+    100 -
+    variable_metrics$missing_percent * 0.5 -
+    ifelse(variable_metrics$constant, 20, 0)
+
+  variable_metrics$quality_score <-
+    round(pmax(0, variable_metrics$quality_score), 1)
+
+
   # ==========================================================
   # Return Quality Assessment
   # ==========================================================
@@ -145,6 +173,8 @@ quality_score <- function(data) {
     duplicate_rows = duplicate_rows,
     constant_columns = constant_columns,
     n_constant_columns = n_constant,
-    quality_score = score
+    quality_score = score,
+
+    variables = variable_metrics
   )
 }

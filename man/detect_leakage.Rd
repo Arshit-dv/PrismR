@@ -22,6 +22,11 @@ A named list containing:
 \item{target_leakage}{Names of predictors identical to the target variable.}
 \item{correlation_leakage}{Numeric predictors with near-perfect correlation to the target.}
 \item{leakage_score}{Overall leakage score ranging from 0 to 100.}
+\item{variables}{
+A data frame containing variable-level leakage diagnostics,
+including identifier, duplicate, high-cardinality,
+target leakage, correlation leakage, and leakage score.
+}
 }
 }
 \description{
