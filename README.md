@@ -131,7 +131,7 @@ and recommends
 ```r
 # install.packages("devtools")
 
-devtools::install_github("YOUR_GITHUB_USERNAME/PrismR")
+devtools::install_github("Arshit-dv/PrismR")
 ```
 
 ---
