@@ -6,7 +6,7 @@ PrismR is an open-source R package that introduces the concept of **Model Readin
 
 Unlike traditional machine learning libraries that focus on model performance, PrismR focuses on **dataset readiness** by analysing data quality, leakage risk and feature characteristics before model development begins.
 
----
+----
 
 # Why PrismR?
 
