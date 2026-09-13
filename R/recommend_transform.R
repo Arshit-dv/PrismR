@@ -1,59 +1,3 @@
-#' Recommend Feature Transformations
-#'
-#' Analyses numeric variables in a data frame and recommends
-#' suitable transformations based on skewness and excess kurtosis.
-#' The function does not modify the data; it only provides
-#' transformation recommendations to assist with preprocessing
-#' before statistical modelling or machine learning.
-#'
-#' Recommendations are based on:
-#' \itemize{
-#'   \item Distribution skewness.
-#'   \item Excess kurtosis (tail heaviness).
-#'   \item Whether the variable contains non-positive values.
-#' }
-#'
-#' Possible recommendations include:
-#' \itemize{
-#'   \item None
-#'   \item Log
-#'   \item Box-Cox
-#'   \item Yeo-Johnson
-#' }
-#'
-#' @param data A data.frame containing predictor variables.
-#'
-#' @return A list containing:
-#' \describe{
-#'   \item{recommendations}{
-#'   A data frame containing:
-#'   \itemize{
-#'     \item variable
-#'     \item skewness
-#'     \item kurtosis
-#'     \item finding
-#'     \item recommendation
-#'   }
-#'   }
-#'
-#'   \item{n_numeric}{
-#'   Number of numeric variables analysed.
-#'   }
-#'
-#'   \item{n_recommended}{
-#'   Number of variables for which a transformation was recommended.
-#'   }
-#'   \item{variables}{
-#'   A data frame containing variable-level transformation
-#'   diagnostics and recommendations.
-#'   }
-#' }
-#'
-#' @examples
-#' recommend_transform(iris)
-#'
-#' @export
-
 #============================================================
 # Internal Constants
 #============================================================
@@ -294,6 +238,59 @@ recommend_one_variable <- function(x) {
 # Recommend Transformations
 #============================================================
 
+#' Recommend Feature Transformations
+#'
+#' Analyses numeric variables in a data frame and recommends
+#' suitable transformations based on skewness and excess kurtosis.
+#' The function does not modify the data; it only provides
+#' transformation recommendations to assist with preprocessing
+#' before statistical modelling or machine learning.
+#'
+#' Recommendations are based on:
+#' \itemize{
+#'   \item Distribution skewness.
+#'   \item Excess kurtosis (tail heaviness).
+#'   \item Whether the variable contains non-positive values.
+#' }
+#'
+#' Possible recommendations include:
+#' \itemize{
+#'   \item None
+#'   \item Log
+#'   \item Box-Cox
+#'   \item Yeo-Johnson
+#' }
+#'
+#' @param data A data.frame containing predictor variables.
+#'
+#' @return A list containing:
+#' \describe{
+#'   \item{recommendations}{
+#'   A data frame containing:
+#'   \itemize{
+#'     \item variable
+#'     \item skewness
+#'     \item kurtosis
+#'     \item finding
+#'     \item recommendation
+#'   }
+#'   }
+#'   \item{n_numeric}{
+#'   Number of numeric variables analysed.
+#'   }
+#'   \item{n_recommended}{
+#'   Number of variables for which a transformation was recommended.
+#'   }
+#'   \item{variables}{
+#'   A data frame containing variable-level transformation
+#'   diagnostics and recommendations.
+#'   }
+#' }
+#'
+#' @examples
+#' recommend_transform(iris)
+#'
+#' @export
 recommend_transform <- function(data) {
 
   #----------------------------------------------------------

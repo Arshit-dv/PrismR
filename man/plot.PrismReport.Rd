@@ -2,15 +2,57 @@
 % Please edit documentation in R/plot.PrismReport.R
 \name{plot.PrismReport}
 \alias{plot.PrismReport}
-\title{Plot a PrismReport}
+\title{Plot a Prism Report}
 \usage{
-\method{plot}{PrismReport}(x, ...)
+\method{plot}{PrismReport}(x, type = c("radial", "circular", "bubble", "radar"), feature = NULL, ...)
 }
 \arguments{
-\item{x}{A PrismReport object.}
+\item{x}{A \code{PrismReport} object returned by
+\code{\link{prism}}.}
 
-\item{...}{Additional arguments.}
+\item{type}{Character string specifying the plot to
+display. One of \code{"radial"}, \code{"circular"},
+\code{"bubble"}, or \code{"radar"}.}
+
+\item{feature}{Character string specifying the variable to
+display when \code{type = "radar"}.}
+
+\item{...}{Additional graphical arguments reserved for
+future extensions.}
+}
+\value{
+A ggplot object.
 }
 \description{
-Plot a PrismReport
+Visualises the results of a Prism Analysis using one of
+several diagnostic plots.
+}
+\details{
+Available visualisations include:
+\itemize{
+\item \strong{radial}: Radial/gauge chart summarising the
+overall health of each PrismR module and dataset readiness.
+\item \strong{circular}: Feature Diagnostic Rose (coxcomb) displaying
+feature Completeness (petal length), Redundancy & Leakage Status (petal color),
+and Recommended Transformation (outer rim cap) around an open donut center.
+\item \strong{bubble}: Statistical feature map displaying Data
+Completeness (100\% - Missing\%) versus Distribution Skewness,
+with leakage vector colors and transformation shapes.
+\item \strong{radar}: Spider/radar chart displaying the raw statistical
+diagnostic profile of a selected variable (Completeness, Symmetry,
+Tail Normalcy, Uniqueness, Leakage Safety, and Feature Stability).
+}
+}
+\examples{
+\dontrun{
+report <- prism(airquality, target = "Ozone")
+plot(report, type = "radial")
+plot(report, type = "circular")
+plot(report, type = "bubble")
+plot(report, type = "radar", feature = "Solar.R")
+}
+
+}
+\seealso{
+\code{\link{prism}}
 }
