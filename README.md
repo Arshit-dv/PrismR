@@ -2,57 +2,92 @@ PrismR
 
 A Statistical Validation Framework for Evaluating Dataset Readiness Before Predictive Modelling.
 
-PrismR is an open-source R package that introduces the concept of Model Readiness—a structured statistical assessment of whether tabular data is truly suitable for predictive modelling before any machine learning algorithm is trained.
+PrismR is an open-source R package that introduces the concept of Model Readiness: a structured statistical assessment of whether tabular data is suitable for predictive modelling before a machine learning algorithm is trained.
 
-Rather than tuning hyperparameters on compromised data, PrismR introduces a dedicated Statistical Validation Layer between preprocessing and model training.
+Rather than tuning models on compromised data, PrismR adds a dedicated Statistical Validation Layer between data preparation and model training.
 
 Why PrismR?
 
-In traditional machine learning pipelines, vast effort is invested in model architectures and tuning, yet data quality, leakage risks, distributional anomalies, and feature drift often remain undetected until model performance degrades in production.
+In traditional machine learning pipelines, large amounts of effort are spent on model selection and tuning, while problems such as missing values, leakage, distributional anomalies, and feature drift may remain hidden.
 
-Traditional Workflow:
-Raw Data ──► Cleaning ──► Feature Engineering ──► Model Training
-                              ▲
-                              └── [Silent issues discovered too late]
+Traditional Workflow
 
-PrismR Workflow:
-Raw Data ──► Cleaning ──► ┌──────────────────────────────┐
-                          │  Statistical Validation      │ ◄── PrismR
-                          │  Layer (Model Readiness)     │
-                          └──────────────┬───────────────┘
-                                         │
-                          Feature Engineering ──► Model Training
+Raw Data
+   |
+   v
+Cleaning
+   |
+   v
+Feature Engineering
+   |
+   v
+Model Training
+   |
+   v
+Silent data issues may be discovered too late
+
+PrismR Workflow
+
+Raw Data
+   |
+   v
+Cleaning
+   |
+   v
++----------------------------------+
+|     Statistical Validation       |
+|          PrismR Layer            |
+|        (Model Readiness)         |
++----------------------------------+
+   |
+   v
+Feature Engineering
+   |
+   v
+Model Training
 
 The "Prism" Philosophy
 
-A physical prism does not create new light—it separates white light into its hidden spectral components. Similarly, PrismR does not mutate or alter your dataset; it refracts tabular data to reveal latent quality deficiencies, leakage channels, mathematical transformation requirements, and feature distribution drift.
+A physical prism separates white light into its hidden components. Similarly, PrismR refracts tabular data to reveal hidden data-quality problems, leakage channels, transformation requirements, and feature distribution drift without modifying the original dataset.
 
-                   Tabular Dataset
-                         │
-                         ▼
-                      [ PrismR ]
-                         │
-        ┌────────────────┼──────────────────┐
-        ▼                ▼                  ▼
-  Data Quality    Leakage Safety    Transformation    Feature Stability
-  (Missing/Dups)  (Collinear/IDs)   (Skew/Kurtosis)    (Drift/PSI)
-        └────────────────┬──────────────────┘
-                         ▼
-               Overall Model Readiness
+                         Tabular Dataset
+                                |
+                                v
+                           +---------+
+                           | PrismR  |
+                           +---------+
+                                |
+           +--------------------+--------------------+
+           |                    |                    |
+           v                    v                    v
+    Data Quality        Leakage Safety       Transformation
+    (Missing/Dups)      (IDs/Leakage)        (Skew/Kurtosis)
+           |
+           +--------------------+--------------------+
+                                |
+                                v
+                       Feature Stability
+                          (Drift / PSI)
+                                |
+                                v
+                     Overall Model Readiness
 
 Quick Start
 
-Run a complete Model Readiness inspection in just three lines of R:
-
 library(PrismR)
 
-# Run full validation with an optional target column
+# Run the complete validation workflow
 report <- prism(airquality, target = "Ozone")
 
-# View the complete diagnostic report
+# View the complete report
 print(report)
 
-High-Level Summary: summary(report)
+# View the concise summary
+summary(report)
+
+High-Level Summary
+
+summary(report)
 
 The summary() method provides a concise overview of the major validation dimensions, including Feature Stability.
 
@@ -95,7 +130,9 @@ Moderate Drift:
 • Month
 • Day
 
-Detailed Diagnostic Audit: print(report)
+Detailed Diagnostic Audit
+
+print(report)
 
 The print() method provides the complete diagnostic report across all PrismR validation modules.
 
@@ -119,7 +156,6 @@ Constant Columns    : 0
 
 ✓ No major data quality issues detected.
 
-
 =========================================================
 Leakage Detection
 =========================================================
@@ -135,7 +171,6 @@ Correlation Leakage     : 0
 
 ✓ No potential leakage detected.
 
-
 =========================================================
 Transformation Analysis
 =========================================================
@@ -148,7 +183,6 @@ Variable             Finding                        Recommendation
 Ozone                Severely right-skewed          Box-Cox
 
 ✓ Remaining 5 variables require no transformation.
-
 
 =========================================================
 Feature Stability
@@ -176,54 +210,44 @@ Feature Stability Analysis
 
 PrismR includes a dedicated Feature Stability module for detecting distribution drift between a reference dataset and a current dataset.
 
-The module uses:
+The module provides:
 
 Population Stability Index (PSI) as the primary drift metric.
 
 Wasserstein distance as a supporting distribution-distance metric.
 
-Per-feature stability scores.
+A per-feature stability score.
 
-Automatic classification into:
+Automatic classification into Stable, Moderate Drift, and Unstable.
 
-Stable
-
-Moderate Drift
-
-Unstable
-
-Feature Stability can be used with either an explicitly supplied current dataset or, when only one dataset is supplied, a deterministic internal partition of the data.
+Feature Stability can compare two explicitly supplied datasets or, when only one dataset is supplied, use a deterministic internal partition for reproducible analysis.
 
 Feature Stability Function
 
 feature_stability(data, current = NULL, verbose = TRUE)
 
-The function evaluates the distributional stability of numeric features.
-
 # Standalone feature stability assessment
 stability <- feature_stability(airquality)
 
-# Access the overall stability score
+# Overall score
 stability$stability_score
 
-# Access per-feature stability results
+# Per-feature results
 stability$variables
 
-# Access unstable features
+# Unstable feature names
 stability$unstable_features
 
-Reference vs. Current Dataset
-
-For production-style drift analysis, a reference dataset and current dataset can be supplied separately:
+Reference vs. Current Data
 
 stability <- feature_stability(
   reference_data,
   current = current_data
 )
 
-Both datasets must contain compatible feature columns.
+Both datasets should contain compatible feature columns.
 
-When current is not supplied, PrismR creates a deterministic partition of the supplied dataset so that the two portions can be compared reproducibly.
+When current is not supplied, PrismR creates a deterministic partition of the supplied dataset so that the analysis is reproducible.
 
 Stability Metrics
 
@@ -255,13 +279,13 @@ Unstable
 
 30
 
-A lower PSI indicates that the current distribution is closer to the reference distribution.
+Lower PSI values indicate that the current distribution is closer to the reference distribution.
 
 Wasserstein Distance
 
-Wasserstein distance provides an additional measure of how far two feature distributions are from each other.
+Wasserstein distance provides an additional measure of the separation between two feature distributions.
 
-Because Wasserstein distance depends on the scale of the feature, PrismR uses it as a supporting metric rather than the primary classification criterion.
+Because Wasserstein distance is scale-dependent, PrismR uses it as a supporting metric rather than the primary classification criterion.
 
 Example Feature Stability Output
 
@@ -319,11 +343,11 @@ report <- prism(
   target = "Ozone"
 )
 
-The stability analysis is performed silently as part of the pipeline and its results are stored inside the returned PrismReport object.
+The stability analysis is performed silently inside the pipeline and its results are stored in the returned PrismReport object.
 
 report$stability
 
-Example structure:
+The stability object contains:
 
 $stability_score
 [1] 63.33
@@ -340,7 +364,7 @@ $variables
 $unstable_features
 [1] "Solar.R"
 
-This allows the same Feature Stability results to be reused by:
+The same stability results are reused by:
 
 summary(report)
 
@@ -354,53 +378,57 @@ plot(report, type = "bubble")
 
 plot(report, type = "radar")
 
-Visual Diagnostic Suite: plot(report)
+Visual Diagnostic Suite
 
-PrismR features a publication-ready diagnostic visualization suite built on ggplot2.
+PrismR includes four diagnostic visualizations built with ggplot2.
 
-# 1. Macro Dataset Health Gauge
+# Macro Dataset Health Gauge
 plot(report, type = "radial")
 
-# 2. Feature Diagnostic Rose
+# Feature Diagnostic Rose
 plot(report, type = "circular")
 
-# 3. Statistical Feature Map
+# Statistical Feature Map
 plot(report, type = "bubble")
 
-# 4. Single-Feature Spider Radar Profile
+# Single-Feature Radar Profile
 plot(report, type = "radar", feature = "Solar.R")
 
-1. Macro Dataset Health Gauge (type = "radial")
+1. Macro Dataset Health Gauge
 
-Tracks overall composite readiness alongside individual validation scores.
+type = "radial"
 
-The visualization dynamically incorporates Feature Stability whenever stability analysis is available.
+Tracks overall model readiness alongside the individual validation dimensions.
 
-<p align="center">
-  <img src="man/figures/radial_gauge.png" alt="Macro Dataset Health Gauge" width="520px" />
-</p>
-
-Outer Ring: Overall Model Readiness Score.
-
-Data Quality Ring: Data Quality Score.
-
-Leakage Ring: Leakage Safety Score.
-
-Transformation Ring: Transformation Health Score.
-
-Dynamic Stability Ring: Automatically adds a Feature Stability track when stability analysis is available.
-
-2. Feature Diagnostic Rose (type = "circular")
-
-A Florence Nightingale coxcomb visualization mapping feature-level diagnostic metrics around an open donut core.
+The visualization dynamically adds a Feature Stability track whenever stability analysis is available.
 
 <p align="center">
-  <img src="man/figures/circular_rose.png" alt="Feature Diagnostic Rose" width="560px" />
+  <img src="man/figures/radial_gauge.png" alt="PrismR Macro Dataset Health Gauge" width="520">
 </p>
 
-Petal Length: True Feature Completeness (100% - Missing%).
+Tracks include:
 
-Petal Color: Feature Integrity & Leakage Vector:
+Overall Model Readiness
+
+Data Quality
+
+Leakage Safety
+
+Transformation Health
+
+Feature Stability when available
+
+2. Feature Diagnostic Rose
+
+type = "circular"
+
+A circular feature-level visualization combining completeness, leakage-related status, transformation recommendations, and stability information.
+
+<p align="center">
+  <img src="man/figures/circular_rose.png" alt="PrismR Feature Diagnostic Rose" width="560">
+</p>
+
+Feature status categories include:
 
 🟩 Clean Feature
 
@@ -412,51 +440,55 @@ Petal Color: Feature Integrity & Leakage Vector:
 
 🟥 Target Leaker
 
-Unstable Distribution Drift is automatically activated when the feature's stability score falls below the instability threshold used by the visualization.
+The unstable-drift category is automatically activated using Feature Stability results.
 
-Outer Rim Cap: Exact mathematical transformation recommended (None, Log, Box-Cox, Yeo-Johnson, Categorical).
+3. Statistical Feature Map
 
-Visual Color Swatches: Direct graphical legend entries for immediate interpretation.
+type = "bubble"
 
-3. Statistical Feature Map (type = "bubble")
-
-Resolves feature distribution properties on a 2D coordinate plane: Feature Completeness on the X-axis versus Distribution Skewness on the Y-axis.
+Maps Feature Completeness against Distribution Skewness.
 
 <p align="center">
-  <img src="man/figures/bubble_map.png" alt="Statistical Feature Map" width="680px" />
+  <img src="man/figures/bubble_map.png" alt="PrismR Statistical Feature Map" width="680">
 </p>
 
-Green Central Zone: Marks the statistically symmetric boundary [-0.5, 0.5] where no transformation is needed.
+The visualization includes:
 
-Warning Bands: Highlight moderate skew ([0.5, 1.0] and [-1.0, -0.5]) and severe skew (> 1.0 or < -1.0).
+A central region for approximately symmetric features.
 
-Point Aesthetics: Point colors reflect leakage risk; point shapes reflect the recommended mathematical transformation.
+Warning bands for moderate and severe skewness.
 
-Stability Integration: Features with sufficiently low stability scores are visually identified as unstable drift.
+Transformation recommendations.
 
-Zero Collision: Powered by ggrepel leader lines and deterministic micro-jittering.
+Leakage-related feature status.
 
-4. Single-Feature Radar Profile (type = "radar", feature = "col")
+Feature Stability integration for unstable drift.
 
-A spider radar chart assessing an individual feature across its statistical and validation dimensions.
+ggrepel annotations and deterministic micro-jittering to reduce label collisions.
+
+4. Single-Feature Radar Profile
+
+type = "radar"
+
+Assesses a selected feature across its statistical and validation dimensions.
 
 <p align="center">
-  <img src="man/figures/radar_profile.png" alt="Feature Radar Profile" width="520px" />
+  <img src="man/figures/radar_profile.png" alt="PrismR Single-Feature Radar Profile" width="520">
 </p>
 
-The radar profile includes:
+The radar includes:
 
-Completeness: 100% - Missing%
+Completeness
 
-Symmetry: Based on absolute skewness.
+Symmetry
 
-Tail Normalcy: Based on absolute excess kurtosis.
+Tail Normalcy
 
-Uniqueness: Non-redundant unique value density.
+Uniqueness
 
-Leakage Safety: Feature-level leakage penalty score.
+Leakage Safety
 
-Stability: Automatically added when Feature Stability data is available for the selected feature.
+Stability when Feature Stability is available
 
 plot(
   report,
@@ -464,13 +496,11 @@ plot(
   feature = "Solar.R"
 )
 
-Dashed Green Benchmark: 80% readiness boundary.
-
-Dynamic Stability Spoke: Automatically expands the radar with a Stability axis when Feature Stability is available.
+The radar automatically expands with a Stability axis when stability information is available for the selected feature.
 
 Standalone Diagnostic Functions
 
-Each PrismR module can also be called as an independent diagnostic function.
+Each PrismR module can also be used independently.
 
 quality_score(data)
 
@@ -517,7 +547,7 @@ l$correlation_leakage
 
 recommend_transform(data)
 
-Analyzes skewness and excess kurtosis using type-2 moments via e1071 and accounts for strictly positive constraints.
+Analyzes skewness and excess kurtosis and recommends appropriate transformations.
 
 t <- recommend_transform(airquality)
 
@@ -593,14 +623,14 @@ stability$stability_score
 stability$variables
 stability$unstable_features
 
-For reference/current distribution comparison:
+For explicit reference/current comparison:
 
 stability <- feature_stability(
   reference_data,
   current = current_data
 )
 
-The function supports a verbose argument so that it can be used either as a standalone diagnostic or silently inside the complete prism() workflow:
+The verbose argument controls standalone output:
 
 # Standalone diagnostic
 feature_stability(
@@ -608,7 +638,7 @@ feature_stability(
   verbose = TRUE
 )
 
-# Silent integration inside a larger pipeline
+# Silent use inside prism()
 feature_stability(
   airquality,
   verbose = FALSE
@@ -616,7 +646,7 @@ feature_stability(
 
 Model Readiness Scoring Logic
 
-PrismR computes a weighted composite Readiness Score (0 - 100):
+PrismR computes a weighted composite Readiness Score from the core readiness dimensions:
 
 0.40 \times \text{Quality}
 +
@@ -625,7 +655,7 @@ PrismR computes a weighted composite Readiness Score (0 - 100):
 0.15 \times \text{Transform Health}
 $$
 
-Feature Stability is reported as an additional validation dimension and is integrated into the diagnostic and visualization layers.
+Feature Stability is reported as an additional validation dimension and is integrated into reporting and visualization.
 
 Verdict
 
@@ -637,41 +667,44 @@ Model Ready
 
 Score ≥ 85 and Leakage ≥ 80
 
-Proceed directly to feature engineering and modelling.
+Proceed to feature engineering and modelling.
 
 Proceed with Caution
 
 Score ≥ 65 and Leakage ≥ 50
 
-Inspect flagged items (outliers, skewness, moderate leakage).
+Inspect flagged issues before modelling.
 
 Action Required
 
 Score < 65 or Leakage < 50
 
-Resolve severe issues (target leakers, constant features, heavy missingness).
+Resolve severe data-quality or leakage issues.
 
 Installation
 
+# Install devtools once if required
 # install.packages("devtools")
+
 devtools::install_github("Arshit-dv/PrismR")
 
 Running Unit Tests
 
-PrismR includes a comprehensive testthat suite verifying diagnostic pipelines, error guards, Feature Stability functionality, and plotting methods.
+PrismR includes a testthat suite for diagnostic pipelines, input validation, Feature Stability, and plotting functionality.
 
-# Run the complete test suite
+Run the complete test suite
+
 testthat::test_dir("tests/testthat")
 
-Feature Stability can also be tested independently:
+Run the Feature Stability tests only
 
 testthat::test_file(
   "tests/testthat/test-feature_stability.R"
 )
 
-The test suite covers:
+The Feature Stability tests cover:
 
-Basic Feature Stability analysis
+Basic stability analysis
 
 Deterministic partition behaviour
 
@@ -685,7 +718,7 @@ PSI calculation
 
 Wasserstein distance
 
-Missing / insufficient data handling
+Insufficient-data handling
 
 Non-numeric datasets
 
@@ -697,24 +730,34 @@ Verbose and silent execution modes
 
 Design Principles
 
-Statistically Justified: Built on established statistical metrics including excess kurtosis, skewness, correlation thresholds, PSI, and Wasserstein distance.
+Statistically Justified
 
-Inspection Without Mutation: Never modifies or transforms your raw data in place.
+Built on established statistical metrics including skewness, kurtosis, correlation thresholds, PSI, and Wasserstein distance.
 
-CRAN-Compliant & Modular: Follows R package standards, clean S3 method dispatches, and decoupled functions.
+Inspection Without Mutation
 
-Deterministic Analysis: Single-dataset Feature Stability analysis uses deterministic partitioning for reproducible results.
+PrismR analyzes the dataset without modifying or transforming the raw data in place.
 
-Modular Diagnostics: Each validation component can operate independently or as part of the complete prism() workflow.
+Modular
 
-Integrated Visualization: Stability results automatically propagate into summary reports and supported visual diagnostics.
+Each validation component can be used independently or as part of the complete prism() workflow.
 
-Automated Future-Proofing: Visualizations automatically incorporate stability metrics whenever Feature Stability analysis is available.
+Deterministic
+
+Single-dataset Feature Stability analysis uses deterministic partitioning for reproducible results.
+
+Integrated Visualization
+
+Feature Stability results propagate into the summary, printed report, and supported diagnostic graphs.
+
+Future-Proof
+
+Visualizations dynamically incorporate stability information whenever Feature Stability analysis is available.
 
 Authors & License
 
 Authors: Arshit Choudhary and Vanshika Sharma
 
-GitHub: @Arshit-dv
+Repository: PrismR
 
 License: MIT License (LICENSE.md)
