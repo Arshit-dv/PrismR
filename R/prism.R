@@ -25,7 +25,7 @@ prism <- function(data, target = NULL) {
   quality <- quality_score(data)
   leakage <- detect_leakage(data, target)
   transformation <- recommend_transform(data)
-  stability <- feature_stability(data)
+  stability <- feature_stability(data,verbose=FALSE)
 
   # Calculate transformation health score (0-100)
   trans_health <- if (transformation$n_numeric > 0) {
@@ -62,4 +62,3 @@ prism <- function(data, target = NULL) {
     verdict = verdict
   )
 }
-

@@ -36,6 +36,10 @@ print.PrismReport <- function(x, ...) {
       "Critical Risk"
     }
 
+  # ==========================================================
+  # Main Report
+  # ==========================================================
+
   cat("\n")
   cat("=========================================================\n")
   cat("                     Prism Report\n")
@@ -84,14 +88,47 @@ print.PrismReport <- function(x, ...) {
   cat("Leakage Detection\n")
   cat("=========================================================\n\n")
 
-  cat("Leakage Safety Score :", x$leakage$leakage_score, "/100\n")
-  cat("Verdict              :", leakage_verdict, "\n\n")
+  cat(
+    "Leakage Safety Score :",
+    x$leakage$leakage_score,
+    "/100\n"
+  )
 
-  cat("Identifier Columns      :", length(x$leakage$identifier_columns), "\n")
-  cat("Duplicate Columns       :", length(x$leakage$duplicate_columns), "\n")
-  cat("High Cardinality        :", length(x$leakage$high_cardinality_columns), "\n")
-  cat("Target Leakage          :", length(x$leakage$target_leakage), "\n")
-  cat("Correlation Leakage     :", length(x$leakage$correlation_leakage), "\n")
+  cat(
+    "Verdict              :",
+    leakage_verdict,
+    "\n\n"
+  )
+
+  cat(
+    "Identifier Columns      :",
+    length(x$leakage$identifier_columns),
+    "\n"
+  )
+
+  cat(
+    "Duplicate Columns       :",
+    length(x$leakage$duplicate_columns),
+    "\n"
+  )
+
+  cat(
+    "High Cardinality        :",
+    length(x$leakage$high_cardinality_columns),
+    "\n"
+  )
+
+  cat(
+    "Target Leakage          :",
+    length(x$leakage$target_leakage),
+    "\n"
+  )
+
+  cat(
+    "Correlation Leakage     :",
+    length(x$leakage$correlation_leakage),
+    "\n"
+  )
 
   total_leaks <-
     length(x$leakage$identifier_columns) +
@@ -114,7 +151,10 @@ print.PrismReport <- function(x, ...) {
 
       cat(
         "Identifiers          :",
-        paste(x$leakage$identifier_columns, collapse = ", "),
+        paste(
+          x$leakage$identifier_columns,
+          collapse = ", "
+        ),
         "\n"
       )
 
@@ -124,7 +164,10 @@ print.PrismReport <- function(x, ...) {
 
       cat(
         "Duplicate Columns    :",
-        paste(x$leakage$duplicate_columns, collapse = ", "),
+        paste(
+          x$leakage$duplicate_columns,
+          collapse = ", "
+        ),
         "\n"
       )
 
@@ -134,7 +177,10 @@ print.PrismReport <- function(x, ...) {
 
       cat(
         "High Cardinality     :",
-        paste(x$leakage$high_cardinality_columns, collapse = ", "),
+        paste(
+          x$leakage$high_cardinality_columns,
+          collapse = ", "
+        ),
         "\n"
       )
 
@@ -144,7 +190,10 @@ print.PrismReport <- function(x, ...) {
 
       cat(
         "Target Leakage       :",
-        paste(x$leakage$target_leakage, collapse = ", "),
+        paste(
+          x$leakage$target_leakage,
+          collapse = ", "
+        ),
         "\n"
       )
 
@@ -154,7 +203,10 @@ print.PrismReport <- function(x, ...) {
 
       cat(
         "Correlation Leakage  :",
-        paste(x$leakage$correlation_leakage, collapse = ", "),
+        paste(
+          x$leakage$correlation_leakage,
+          collapse = ", "
+        ),
         "\n"
       )
 
@@ -211,7 +263,10 @@ print.PrismReport <- function(x, ...) {
     )
 
     cat(
-      paste(rep("-", 70), collapse = ""),
+      paste(
+        rep("-", 70),
+        collapse = ""
+      ),
       "\n",
       sep = ""
     )
@@ -244,6 +299,164 @@ print.PrismReport <- function(x, ...) {
     }
 
   }
+
+  cat("\n\n")
+
+  # ==========================================================
+  # Feature Stability
+  # ==========================================================
+
+  cat("=========================================================\n")
+  cat("Feature Stability\n")
+  cat("=========================================================\n\n")
+
+  if (is.null(x$stability)) {
+
+    cat("Feature Stability analysis not available.\n")
+
+  } else {
+
+    stability_score <- x$stability$stability_score
+
+    if (is.na(stability_score)) {
+
+      cat(
+        "Overall Stability Score : Not Available\n\n"
+      )
+
+    } else {
+
+      cat(
+        "Overall Stability Score :",
+        stability_score,
+        "/100\n\n"
+      )
+
+    }
+
+    stability_data <- x$stability$variables
+
+    if (
+      !is.null(stability_data) &&
+      nrow(stability_data) > 0
+    ) {
+
+      stable_features <- stability_data$variable[
+        stability_data$status == "Stable"
+      ]
+
+      moderate_features <- stability_data$variable[
+        stability_data$status == "Moderate Drift"
+      ]
+
+      unstable_features <- stability_data$variable[
+        stability_data$status == "Unstable"
+      ]
+
+      cat(
+        "Stable Features         :",
+        length(stable_features),
+        "\n"
+      )
+
+      cat(
+        "Moderate Drift          :",
+        length(moderate_features),
+        "\n"
+      )
+
+      cat(
+        "Unstable Features       :",
+        length(unstable_features),
+        "\n"
+      )
+
+      # --------------------------------------------------------
+      # Unstable Features
+      # --------------------------------------------------------
+
+      if (length(unstable_features) > 0) {
+
+        cat("\nUnstable Features\n")
+        cat("-----------------\n")
+
+        for (feature in unstable_features) {
+
+          cat(
+            "\u2022 ",
+            feature,
+            "\n",
+            sep = ""
+          )
+
+        }
+
+      } else {
+
+        cat("\n")
+        cat("\u2713 No unstable features detected.\n")
+
+      }
+
+      # --------------------------------------------------------
+      # Moderate Drift
+      # --------------------------------------------------------
+
+      if (length(moderate_features) > 0) {
+
+        cat("\nModerate Drift\n")
+        cat("--------------\n")
+
+        for (feature in moderate_features) {
+
+          cat(
+            "\u2022 ",
+            feature,
+            "\n",
+            sep = ""
+          )
+
+        }
+
+      }
+
+      # --------------------------------------------------------
+      # Stable Features
+      # --------------------------------------------------------
+
+      if (length(stable_features) > 0) {
+
+        cat("\nStable Features\n")
+        cat("---------------\n")
+
+        for (feature in stable_features) {
+
+          cat(
+            "\u2022 ",
+            feature,
+            "\n",
+            sep = ""
+          )
+
+        }
+
+      }
+
+    } else {
+
+      cat(
+        "Feature Stability analysis not available.\n"
+      )
+
+    }
+
+  }
+
+  cat("\n\n")
+
+  # ==========================================================
+  # Return Object
+  # ==========================================================
 
   invisible(x)
 
