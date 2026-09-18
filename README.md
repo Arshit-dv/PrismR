@@ -268,7 +268,7 @@ Inspired by Florence Nightingale’s polar area diagrams, the **Diagnostic Rose*
 </p>
 
 #### Decoding the Petals:
-* **Petal Length (Radial Depth)**: Measures **True Feature Completeness** ($100\% - \text{Missing}\%$). Complete features reach the outer boundary; variables with missing values (such as `Ozone` with 24.2% missingness) display visibly indented petals.
+* **Petal Length (Radial Depth)**: Measures **True Feature Completeness** (100% − Missing %). Complete features reach the outer boundary; variables with missing values (such as `Ozone` with 24.2% missingness) display visibly indented petals.
 * **Petal Color (Integrity Vector)**:
   * 🟩 **Clean Feature**: Passed all leakage, stability, and redundancy audits.
   * 🟦 **Identifier / High Cardinality**: Candidate surrogate key or unique ID requiring removal.
@@ -305,7 +305,7 @@ The **Radar Profile** isolates an individual feature and inspects its performanc
 </p>
 
 #### Decoding the 6 Spoke Dimensions:
-1. **Completeness**: $100\% - \text{Missing Values}\%$.
+1. **Completeness**: 100% − Missing Values %.
 2. **Symmetry**: Distribution skewness score ($100 - |\text{Skewness}| \times 30$, floor 0).
 3. **Tail Normalcy**: Kurtosis health score ($100 - |\text{Excess Kurtosis}| \times 15$, floor 0).
 4. **Uniqueness**: Density of non-redundant distinct values.
@@ -345,7 +345,7 @@ Data quality failures are rarely uniform. A dataset might contain zero missing v
 4. **Constant (Zero-Variance) Features**: Features with identical values across all observations.
 
 #### Mathematical Formulation:
-$$\text{Quality Score} = \max\left(0, 100 - \left(0.50 \times \text{Missing}\% + 0.30 \times \text{Duplicate Rows}\% + 0.20 \times \text{Constant Cols}\%\right)\right)$$
+$$\text{Quality Score} = \max\left(0,\, 100 - \left(0.50 \times \text{Missing Pct} + 0.30 \times \text{Duplicate Row Pct} + 0.20 \times \text{Constant Col Pct}\right)\right)$$
 
 #### Usage:
 ```r

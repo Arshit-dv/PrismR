@@ -2,6 +2,19 @@
 # Plot PrismReport
 # ==========================================================
 
+# Silence R CMD check notes for ggplot2 aesthetic evaluation variables
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(
+    c(
+      "variable", "completeness", "skewness", "leak_status", "recommendation",
+      "x", "y", "xend", "yend", "xmin", "xmax", "ymin", "ymax",
+      "group", "fill", "color", "label", "angle", "hjust", "vjust",
+      "alpha", "petal_color", "rim_color", "score", "axis", "dimension",
+      "value", "pct", "status", "stability_score", "stability_status"
+    )
+  )
+}
+
 #' Build Variable Diagnostic Profile
 #'
 #' Internal helper to merge quality, leakage, and transformation
