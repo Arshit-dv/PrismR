@@ -3,3 +3,5 @@
 ^LICENSE\.md$
 ^assets$
 ^Rplots\.pdf$
+^rides_data\.json$
+^.*\.db$

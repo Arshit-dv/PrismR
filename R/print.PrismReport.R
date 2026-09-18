@@ -245,6 +245,64 @@ print.PrismReport <- function(x, ...) {
 
   }
 
-  invisible(x)
+  # ==========================================================
+  # Feature Stability
+  # ==========================================================
 
+  cat("\n=========================================================\n")
+  cat("Feature Stability\n")
+  cat("=========================================================\n\n")
+
+  if (is.null(x$stability) || !is.list(x$stability)) {
+    cat("Feature Stability analysis not available.\n")
+  } else {
+    stab_score <- x$stability$stability_score
+    stab_verdict <- if (!is.null(x$stability$verdict)) x$stability$verdict else "Not Available"
+
+    if (is.na(stab_score)) {
+      cat("Overall Stability Score : Not Available\n")
+    } else {
+      cat("Overall Stability Score :", stab_score, "/100\n")
+    }
+    cat("Verdict                 :", stab_verdict, "\n\n")
+
+    stab_df <- x$stability$variables
+    if (is.data.frame(stab_df) && nrow(stab_df) > 0) {
+      st_feats <- x$stability$stable_features
+      mod_feats <- x$stability$moderate_features
+      unst_feats <- x$stability$unstable_features
+
+      cat("Evaluated Features      :", nrow(stab_df), "\n")
+      cat("Stable Features         :", length(st_feats), "\n")
+      cat("Moderate Drift          :", length(mod_feats), "\n")
+      cat("Unstable Features       :", length(unst_feats), "\n")
+
+      if (length(unst_feats) > 0) {
+        cat("\nUnstable Features (Drift Detected)\n")
+        cat("----------------------------------\n")
+        for (feat in unst_feats) {
+          sub_r <- stab_df[stab_df$variable == feat, ]
+          cat(sprintf("• %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
+        }
+      }
+
+      if (length(mod_feats) > 0) {
+        cat("\nModerate Drift\n")
+        cat("--------------\n")
+        for (feat in mod_feats) {
+          sub_r <- stab_df[stab_df$variable == feat, ]
+          cat(sprintf("• %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
+        }
+      }
+
+      if (length(unst_feats) == 0 && length(mod_feats) == 0) {
+        cat("\n\u2713 No significant distribution drift detected across features.\n")
+      }
+    } else {
+      cat("No features available for stability analysis.\n")
+    }
+  }
+
+  cat("\n\n")
+  invisible(x)
 }

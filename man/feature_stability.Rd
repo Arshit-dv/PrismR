@@ -4,15 +4,43 @@
 \alias{feature_stability}
 \title{Feature Stability Assessment}
 \usage{
-feature_stability(data)
+feature_stability(
+  data,
+  current = NULL,
+  split_ratio = 0.5,
+  partition_col = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{data}{A data.frame to assess.}
+\item{data}{A data.frame used as the reference dataset (or for single-dataset
+drift evaluation).}
+
+\item{current}{Optional current data.frame to compare against \code{data}.}
+
+\item{split_ratio}{Numeric. Proportion of rows to allocate to the reference
+dataset in single-dataset mode. Defaults to 0.5 (first 50\% vs. last 50\%).}
+
+\item{partition_col}{Optional character. Column name to order by before
+partitioning in single-dataset mode (e.g. a date or time column).}
+
+\item{verbose}{Logical. If TRUE, prints a human-readable stability
+report. Defaults to TRUE.}
 }
 \value{
-A list containing stability metrics and scores.
+A list containing:
+\item{stability_score}{Overall stability score from 0 to 100.}
+\item{variables}{Feature-level PSI, Wasserstein distance, stability score and status.}
+\item{unstable_features}{Character vector of unstable feature names.}
+\item{method}{Assessment method used.}
 }
 \description{
-Evaluates the stability and distribution drift of features.
-(Under development).
+Evaluates feature distribution drift using Population Stability Index
+(PSI) and Wasserstein distance across numeric and categorical features.
+}
+\details{
+If only one dataset is supplied, the function performs a sequential
+partition-based stability assessment (comparing the first half to the
+second half of observations). For real-world monitoring, users should
+provide reference and current datasets separately.
 }

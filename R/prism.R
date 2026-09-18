@@ -6,6 +6,7 @@
 #'
 #' @param data A data.frame to assess.
 #' @param target Optional name of the target variable.
+#' @param current Optional current data.frame to evaluate distribution drift against \code{data}.
 #'
 #' @return A \code{PrismReport} S3 object containing detailed
 #'   validation metrics and readiness verdict.
@@ -16,7 +17,7 @@
 #' summary(report)
 #'
 #' @export
-prism <- function(data, target = NULL) {
+prism <- function(data, target = NULL, current = NULL) {
 
   if (!is.data.frame(data)) {
     stop("`data` must be a data.frame.", call. = FALSE)
@@ -25,7 +26,7 @@ prism <- function(data, target = NULL) {
   quality <- quality_score(data)
   leakage <- detect_leakage(data, target)
   transformation <- recommend_transform(data)
-  stability <- feature_stability(data)
+  stability <- feature_stability(data, current = current, verbose = FALSE)
 
   # Calculate transformation health score (0-100)
   trans_health <- if (transformation$n_numeric > 0) {
@@ -44,8 +45,11 @@ prism <- function(data, target = NULL) {
   )
   readiness_score <- max(0, min(100, readiness_score))
 
-  # Determine overall readiness verdict
-  verdict <- if (readiness_score >= 85 && leakage$leakage_score >= 80) {
+  # Determine overall readiness verdict (gated by leakage and feature stability)
+  has_unstable_drift <- !is.null(stability$unstable_features) &&
+                        length(stability$unstable_features) > 0
+
+  verdict <- if (readiness_score >= 85 && leakage$leakage_score >= 80 && !has_unstable_drift) {
     "Model Ready"
   } else if (readiness_score >= 65 && leakage$leakage_score >= 50) {
     "Proceed with Caution"

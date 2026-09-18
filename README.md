@@ -81,6 +81,16 @@ Transformation Analysis
 1 variable(s) require transformation.
 
 • Ozone → Box-Cox
+
+Feature Stability
+-----------------------------------------
+Overall Stability Score : 85.0/100
+Stability Verdict       : Stable (No Significant Drift)
+Stable Features         : 6
+Moderate Drift          : 0
+Unstable Features       : 0
+
+✓ No unstable features detected.
 ```
 
 ### Detailed Diagnostic Audit: `print(report)`
@@ -133,6 +143,20 @@ Variable             Finding                        Recommendation
 Ozone                Severely right-skewed          Box-Cox             
 
 ✓ Remaining 5 variables require no transformation.
+
+=========================================================
+Feature Stability
+=========================================================
+
+Overall Stability Score : 85.0 /100
+Verdict                 : Stable (No Significant Drift)
+
+Evaluated Features      : 6
+Stable Features         : 6
+Moderate Drift          : 0
+Unstable Features       : 0
+
+✓ No significant distribution drift detected across features.
 ```
 
 ---
@@ -270,8 +294,30 @@ t$variables[, c("variable", "skewness", "finding", "recommendation")]
 | Wind | 0.34 | Approximately symmetric | **None** |
 | Temp | -0.37 | Approximately symmetric | **None** |
 
-### `feature_stability(data)`
-*(Under active development)* Evaluates dataset distribution drift across time, partitions, or cross-validation folds using metrics like the Population Stability Index (PSI) and Wasserstein distance.
+### `feature_stability(data, current = NULL, split_ratio = 0.5, partition_col = NULL)`
+Evaluates dataset distribution drift across numeric and categorical features using **Population Stability Index (PSI)** with Bayesian Laplace smoothing and **Dual Wasserstein distance** (raw Earth Mover's Distance and scale-normalized $\frac{W_1}{\sigma_{\text{pooled}}}$):
+
+```r
+# Standalone single-dataset stability check (sequential baseline vs. recent)
+s <- feature_stability(airquality)
+
+s$stability_score    # Continuous macro score (0 - 100)
+s$verdict            # Gating verdict (e.g., "Stable (No Significant Drift)")
+s$variables          # Variable-level PSI, Wasserstein, and status table
+s$unstable_features  # Names of features with significant distribution shift
+```
+
+For production monitoring or train-vs-test drift evaluation, supply a reference and current dataset:
+
+```r
+s <- feature_stability(train_df, current = test_df)
+```
+
+| PSI Metric | Classification | Stability Score | Practitioner Action |
+|:---|:---|:---|:---|
+| **$\text{PSI} < 0.10$** | 🟩 **Stable** | **100** | Insignificant shift. Feature is ready for predictive modeling. |
+| **$0.10 \le \text{PSI} < 0.25$** | 🟨 **Moderate Drift** | **70** | Slight shift. Inspect feature distribution or apply regularization. |
+| **$\text{PSI} \ge 0.25$** | 🟥 **Unstable** | **30** | Critical drift. Risk of model degradation in production. |
 
 ---
 
@@ -281,11 +327,14 @@ PrismR computes a weighted composite **Readiness Score** ($0 - 100$):
 
 $$\text{Readiness Score} = 0.40 \times \text{Quality} + 0.45 \times \text{Leakage} + 0.15 \times \text{Transform Health}$$
 
-| Verdict | Score Thresholds | Action |
+### Dual-Layer Gating Verdicts
+To prevent the "averaging fallacy" (where high scores mask a single catastrophic failure), the overall verdict applies **hard gating constraints**:
+
+| Verdict | Conditions | Action |
 |:---|:---|:---|
-| **Model Ready** | Score $\ge 85$ and Leakage $\ge 80$ | Proceed directly to feature engineering and modeling. |
-| **Proceed with Caution** | Score $\ge 65$ and Leakage $\ge 50$ | Inspect flagged items (outliers, skewness, moderate leakage). |
-| **Action Required** | Score $< 65$ or Leakage $< 50$ | Resolve severe issues (target leakers, constant features, heavy missingness). |
+| **Model Ready** | Score $\ge 85$, Leakage $\ge 80$, and **0 Unstable Features** | Proceed directly to feature engineering and modeling. |
+| **Proceed with Caution** | Score $\ge 65$ and Leakage $\ge 50$ (or moderate drift flagged) | Inspect flagged items (outliers, skewness, moderate drift). |
+| **Action Required** | Score $< 65$, Leakage $< 50$, or **Unstable Features Detected** | Resolve critical blockers (target leakers, unstable features, constant columns). |
 
 ---
 

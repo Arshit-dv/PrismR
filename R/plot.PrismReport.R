@@ -37,7 +37,11 @@ build_profile <- function(x) {
   # Merge stability if available
   if (!is.null(x$stability) && is.list(x$stability)) {
     if (is.data.frame(x$stability$variables) && "variable" %in% names(x$stability$variables)) {
-      prof <- merge(prof, x$stability$variables, by = "variable", all.x = TRUE)
+      s_df <- x$stability$variables
+      if ("status" %in% names(s_df)) {
+        names(s_df)[names(s_df) == "status"] <- "stability_status"
+      }
+      prof <- merge(prof, s_df, by = "variable", all.x = TRUE)
     } else if (!is.null(x$stability$feature_stability) && !is.null(names(x$stability$feature_stability))) {
       stab_df <- data.frame(
         variable = names(x$stability$feature_stability),

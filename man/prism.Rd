@@ -4,12 +4,14 @@
 \alias{prism}
 \title{Perform Complete Prism Statistical Validation}
 \usage{
-prism(data, target = NULL)
+prism(data, target = NULL, current = NULL)
 }
 \arguments{
 \item{data}{A data.frame to assess.}
 
 \item{target}{Optional name of the target variable.}
+
+\item{current}{Optional current data.frame to evaluate distribution drift against \code{data}.}
 }
 \value{
 A \code{PrismReport} S3 object containing detailed

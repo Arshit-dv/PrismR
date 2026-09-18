@@ -114,6 +114,56 @@ summary.PrismReport <- function(object, ...) {
 
   }
 
+  # ==========================================================
+  # Feature Stability
+  # ==========================================================
+
+  cat("\nFeature Stability\n")
+  cat("-----------------------------------------\n")
+
+  if (is.null(object$stability) || !is.list(object$stability)) {
+    cat("Feature Stability analysis not available.\n")
+  } else {
+    stab_score <- object$stability$stability_score
+    stab_verdict <- if (!is.null(object$stability$verdict)) object$stability$verdict else "Not Available"
+
+    if (is.na(stab_score)) {
+      cat("Overall Stability Score : Not Available\n")
+    } else {
+      cat("Overall Stability Score : ", stab_score, "/100\n", sep = "")
+    }
+    cat("Stability Verdict       : ", stab_verdict, "\n", sep = "")
+
+    stab_df <- object$stability$variables
+    if (is.data.frame(stab_df) && nrow(stab_df) > 0) {
+      st_feats <- object$stability$stable_features
+      mod_feats <- object$stability$moderate_features
+      unst_feats <- object$stability$unstable_features
+
+      cat("Stable Features         : ", length(st_feats), "\n", sep = "")
+      cat("Moderate Drift          : ", length(mod_feats), "\n", sep = "")
+      cat("Unstable Features       : ", length(unst_feats), "\n", sep = "")
+
+      if (length(unst_feats) > 0) {
+        cat("\n⚠ Unstable Features:\n")
+        for (feat in unst_feats) {
+          cat("• ", feat, "\n", sep = "")
+        }
+      }
+
+      if (length(mod_feats) > 0) {
+        cat("\nModerate Drift:\n")
+        for (feat in mod_feats) {
+          cat("• ", feat, "\n", sep = "")
+        }
+      }
+
+      if (length(unst_feats) == 0 && length(mod_feats) == 0) {
+        cat("\n✓ No unstable features detected.\n")
+      }
+    }
+  }
+
   invisible(object)
 
 }
