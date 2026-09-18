@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check" /></a>
-  <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/CRAN-v0.1.0-blue.svg" alt="CRAN status" /></a>
+  <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/CRAN-v1.0.0-blue.svg" alt="CRAN status" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Lifecycle-Stable-green.svg" alt="Lifecycle: Stable" /></a>
   <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Coverage-100%25-brightgreen.svg" alt="Test Coverage" /></a>
@@ -72,8 +72,28 @@ Similarly, **PrismR does not mutate or alter your dataset**. Instead, it passes 
                          - Box-Cox / Yeo-Johnson / Log
                                    │
                                    ▼
-                     Dual-Layer Model Readiness Score
-                      (Weighted Score + Hard Vetoes)
+                      Dual-Layer Model Readiness Score
+                       (Weighted Score + Hard Vetoes)
+```
+
+---
+
+## Installation
+
+You can install the official release of **PrismR** from GitHub:
+
+```r
+# Install using remotes (recommended)
+install.packages("remotes")
+remotes::install_github("Arshit-dv/PrismR")
+
+# Or using pak (fastest)
+install.packages("pak")
+pak::pkg_install("Arshit-dv/PrismR")
+
+# Or using devtools
+install.packages("devtools")
+devtools::install_github("Arshit-dv/PrismR")
 ```
 
 ---

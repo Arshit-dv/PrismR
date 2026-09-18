@@ -1,7 +1,7 @@
 Package: PrismR
 Type: Package
 Title: A Statistical Validation Framework for Model Readiness
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(
     person(
       given = "Arshit",
