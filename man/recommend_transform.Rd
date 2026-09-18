@@ -12,26 +12,10 @@ recommend_transform(data)
 \value{
 A list containing:
 \describe{
-\item{recommendations}{
-A data frame containing:
-\itemize{
-\item variable
-\item skewness
-\item kurtosis
-\item finding
-\item recommendation
-}
-}
-\item{n_numeric}{
-Number of numeric variables analysed.
-}
-\item{n_recommended}{
-Number of variables for which a transformation was recommended.
-}
-\item{variables}{
-A data frame containing variable-level transformation
-diagnostics and recommendations.
-}
+\item{recommendations}{A data frame of features requiring transformation (excluding \code{"None"}).}
+\item{n_numeric}{Number of numeric variables analysed.}
+\item{n_recommended}{Number of variables for which a transformation was recommended.}
+\item{variables}{A complete data frame of all analysed numeric features and their metrics.}
 }
 }
 \description{

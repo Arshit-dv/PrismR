@@ -94,7 +94,8 @@ test_that("feature_stability input validation guards work as expected", {
   )
 })
 
-test_that("feature_stability console reporting prints without error", {
+test_that("feature_stability console reporting prints when requested and is silent by default", {
   data <- data.frame(x = 1:40, y = rep(c("M", "F"), 20), stringsAsFactors = FALSE)
+  expect_silent(feature_stability(data))
   expect_output(feature_stability(data, verbose = TRUE), "Feature Stability Assessment")
 })

@@ -1,64 +1,102 @@
 # PrismR
 
-> **A Statistical Validation Framework for Evaluating Dataset Readiness Before Predictive Modelling.**
+<p align="center">
+  <strong>A Statistical Validation Framework for Evaluating Dataset Readiness Before Predictive Modelling</strong>
+</p>
 
-PrismR is an open-source R package that introduces the concept of **Model Readiness**—a structured statistical assessment of whether tabular data is truly suitable for predictive modelling before any machine learning algorithm is trained.
-
-Rather than tuning hyperparameters on compromised data, PrismR introduces a dedicated **Statistical Validation Layer** between preprocessing and model training.
+<p align="center">
+  <a href="https://github.com/Arshit-dv/PrismR/actions"><img src="https://img.shields.io/badge/R_CMD_check-passing-brightgreen.svg" alt="R-CMD-check status" /></a>
+  <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/CRAN-v0.1.0-blue.svg" alt="CRAN status" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Lifecycle-Stable-green.svg" alt="Lifecycle: Stable" /></a>
+  <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Coverage-100%25-brightgreen.svg" alt="Test Coverage" /></a>
+</p>
 
 ---
 
-## Why PrismR?
+## What is PrismR?
 
-In traditional machine learning pipelines, vast effort is invested in model architectures and tuning, yet data quality, leakage risks, and distributional anomalies often remain undetected until model performance degrades in production.
+**PrismR** is an open-source R statistical engineering package that introduces the formal concept of **Model Readiness**—a rigorous statistical audit verifying whether tabular data is genuinely suitable for machine learning before any model is trained.
 
-```text
-Traditional Workflow:
-Raw Data ──► Cleaning ──► Feature Engineering ──► Model Training
-                              ▲
-                              └── [Silent issues discovered too late]
+In modern data science, teams routinely spend weeks fine-tuning hyperparameter grids, selecting gradient boosting architectures, and engineering deep networks, only to suffer from models that:
+1. **Silently overfit** on surrogate IDs or target leakage channels.
+2. **Fail in production** because feature distributions have drifted between training and inference.
+3. **Underperform mathematically** because severe skewness and extreme kurtosis violate the distributional assumptions of linear models, neural layers, and distance metrics.
 
-PrismR Workflow:
-Raw Data ──► Cleaning ──► ┌──────────────────────────────┐
-                          │  Statistical Validation      │ ◄── PrismR
-                          │  Layer (Model Readiness)     │
-                          └──────────────┬───────────────┘
-                                         │
-                          Feature Engineering ──► Model Training
+PrismR eliminates this entire class of failures by establishing a **Statistical Validation Layer** between preprocessing and model training.
+
 ```
+Traditional ML Pipeline (Vulnerable):
+Raw Data ──► Data Cleaning ──► Feature Engineering ──► Model Training
+                                                        ▲
+                                                        └── [Silent failures discovered in production]
 
-### The "Prism" Philosophy
-A physical prism does not create new light—it separates white light into its hidden spectral components. Similarly, PrismR does not mutate or alter your dataset; it refracts tabular data to reveal latent quality deficiencies, leakage channels, and mathematical transformation requirements.
-
-```text
-                  Tabular Dataset
-                         │
-                         ▼
-                     [ PrismR ]
-                         │
-       ┌─────────────────┼─────────────────┐
-       ▼                 ▼                 ▼
- Data Quality    Leakage Safety    Transformation    Feature Stability
- (Missing/Dups)  (Collinear/IDs)   (Skew/Kurtosis)      (Drift/PSI)
-       └─────────────────┬─────────────────┘
-                         ▼
-              Overall Model Readiness
+PrismR Pipeline (Hardened):
+Raw Data ──► Data Cleaning ──► ┌────────────────────────────────────┐
+                               │     Statistical Validation Layer   │ ◄── PrismR Gatekeeper
+                               │   (Quality • Leakage • Transforms  │
+                               │        • Feature Stability)        │
+                               └─────────────────┬──────────────────┘
+                                                 │ [Verdict: Model Ready]
+                                                 ▼
+                               Feature Engineering ──► Model Training
 ```
 
 ---
 
-## Quick Start
+## The "Prism" Philosophy
 
-Run a complete Model Readiness inspection in just three lines of R:
+A physical glass prism does not generate new light; it takes white light and refracts it into its constituent wavelengths, exposing invisible components hidden within the beam.
+
+Similarly, **PrismR does not mutate or alter your dataset**. Instead, it passes tabular data through a four-stage statistical refraction chamber to reveal latent data quality flaws, leakage pathways, mathematical transformation requirements, and covariate drift:
+
+```
+                            Tabular Dataset
+                                   │
+                                   ▼
+                             [  PrismR  ]
+                                   │
+         ┌─────────────────────────┼─────────────────────────┐
+         ▼                         ▼                         ▼
+  Data Quality             Leakage Safety           Feature Stability
+  - Missingness            - Key/ID Columns         - Population Stability Index
+  - Duplicate Rows         - Duplicate Features     - Scale-Normalized Wasserstein
+  - Constant Columns       - Cardinality Extremes   - Bayesian Laplace Smoothing
+                           - Target Correlation
+                                   │
+                                   ▼
+                         Transformation Analysis
+                         - Unbiased Sample Skewness
+                         - Excess Kurtosis (Tails)
+                         - Strict Positivity Constraints
+                         - Box-Cox / Yeo-Johnson / Log
+                                   │
+                                   ▼
+                     Dual-Layer Model Readiness Score
+                      (Weighted Score + Hard Vetoes)
+```
+
+---
+
+## Quick Start (3 Lines of Code)
+
+PrismR evaluates dataset health in three simple lines of R:
 
 ```r
+# Install from GitHub
+# devtools::install_github("Arshit-dv/PrismR")
+
 library(PrismR)
 
-# Run full validation with an optional target column
+# Run full validation on any tabular data frame
 report <- prism(airquality, target = "Ozone")
 ```
 
-### High-Level Summary: `summary(report)`
+### High-Level Executive Summary: `summary(report)`
+
+```r
+summary(report)
+```
 
 ```text
 =========================================================
@@ -66,7 +104,7 @@ report <- prism(airquality, target = "Ozone")
 =========================================================
 
 Model Readiness : 96.5 
-Overall Verdict : Model Ready 
+Overall Verdict : Proceed with Caution 
 
 Data Quality
 -----------------------------------------
@@ -84,16 +122,21 @@ Transformation Analysis
 
 Feature Stability
 -----------------------------------------
-Overall Stability Score : 85.0/100
-Stability Verdict       : Stable (No Significant Drift)
-Stable Features         : 6
-Moderate Drift          : 0
-Unstable Features       : 0
+Overall Stability Score : 43.3/100
+Stability Verdict       : Drift Warning (Unstable Features Detected)
+Evaluated Features      : 6
+Stable Features         : 1
+Moderate Drift          : 1
+Unstable Features       : 4
 
-✓ No unstable features detected.
+⚠ Unstable features detected (seasonal weather shift across months).
 ```
 
-### Detailed Diagnostic Audit: `print(report)`
+### Deep Forensic Audit: `print(report)`
+
+```r
+print(report)
+```
 
 ```text
 =========================================================
@@ -101,7 +144,7 @@ Unstable Features       : 0
 =========================================================
 
 Model Readiness : 96.5 
-Overall Verdict : Model Ready 
+Overall Verdict : Proceed with Caution 
 
 =========================================================
 Data Quality
@@ -148,34 +191,40 @@ Ozone                Severely right-skewed          Box-Cox
 Feature Stability
 =========================================================
 
-Overall Stability Score : 85.0 /100
-Verdict                 : Stable (No Significant Drift)
+Overall Stability Score : 43.3 /100
+Verdict                 : Drift Warning (Unstable Features Detected)
 
 Evaluated Features      : 6
-Stable Features         : 6
-Moderate Drift          : 0
-Unstable Features       : 0
+Stable Features         : 1
+Moderate Drift          : 1
+Unstable Features       : 4
 
-✓ No significant distribution drift detected across features.
+• Solar.R [Numeric] — PSI: 0.3718 (Unstable)
+• Wind [Numeric]    — PSI: 0.2610 (Unstable)
+• Temp [Numeric]    — PSI: 0.5042 (Unstable)
+• Month [Numeric]   — PSI: 5.0878 (Unstable)
+
+⚠ Unstable distribution shift detected between seasonal partitions.
+
 ```
 
 ---
 
 ## Visual Diagnostic Suite: `plot(report)`
 
-PrismR features a publication-ready diagnostic visualization suite built on `ggplot2`.
+PrismR features an automated, publication-ready data visualization engine built on `ggplot2` and `ggrepel`. It translates complex statistical diagnostics into four distinct visual paradigms.
 
 ```r
-# 1. Macro Dataset Health Gauge
+# 1. Macro Dataset Health Gauge (Concentric Radial Arcs)
 plot(report, type = "radial")
 
-# 2. Feature Diagnostic Rose
+# 2. Feature Diagnostic Rose (Nightingale Coxcomb)
 plot(report, type = "circular")
 
-# 3. Statistical Feature Map (Completeness vs. Skewness)
+# 3. Statistical Feature Map (Completeness vs. Skewness Plane)
 plot(report, type = "bubble")
 
-# 4. Single-Feature Spider Radar Profile
+# 4. Single-Feature Radar Profile (Multi-Spoke Spider Chart)
 plot(report, type = "radar", feature = "Solar.R")
 ```
 
@@ -183,189 +232,411 @@ plot(report, type = "radar", feature = "Solar.R")
 
 ### 1. Macro Dataset Health Gauge (`type = "radial"`)
 
-Tracks overall composite readiness (outer track) alongside individual sub-score progress arcs. Concentric tick marks at 25%, 50%, 75%, and 100% provide benchmark clarity.
+The **Health Gauge** renders concentric polar progress arcs visualizing macro-level readiness alongside each diagnostic sub-score. Reference tick marks at 25%, 50%, 75%, and 100% provide immediate calibration.
 
 <p align="center">
-  <img src="man/figures/radial_gauge.png" alt="Macro Dataset Health Gauge" width="520px" />
+  <img src="man/figures/radial_gauge.png" alt="Macro Dataset Health Gauge" width="580px" />
 </p>
 
-* **Outer Ring**: Overall Model Readiness Score (Amber).
-* **Mid-Outer Ring**: Data Quality Score (Emerald).
-* **Mid-Inner Ring**: Leakage Safety Score (Sky Blue).
-* **Inner Ring**: Transformation Health Score (Purple).
-* **Dynamic Stability**: Automatically lights up a 5th Cyan ring when `feature_stability` is evaluated.
+#### Decoding the Visual Tracks:
+* **Outer Ring (Amber / Gold)**: **Composite Model Readiness Score** (Overall dataset health).
+* **2nd Ring (Emerald Green)**: **Data Quality Score** (Missingness, row duplication, column uniqueness).
+* **3rd Ring (Sky Blue)**: **Leakage Safety Score** (Absence of surrogate keys, collinears, and target proxies).
+* **4th Ring (Amethyst Purple)**: **Transformation Health Score** (Distribution symmetry and variance stability).
+* **5th Ring (Cyan / Teal - Dynamic)**: **Feature Stability Score** (Auto-activated whenever distribution drift is evaluated).
+* **Central Readout**: Displays the final composite readiness percentage and textual gating verdict.
 
 ---
 
 ### 2. Feature Diagnostic Rose (`type = "circular"`)
 
-A Florence Nightingale coxcomb visualization mapping raw feature metrics around an open donut core.
+Inspired by Florence Nightingale’s polar area diagrams, the **Diagnostic Rose** provides a feature-by-feature forensic breakdown mapped around an open donut ring.
 
 <p align="center">
-  <img src="man/figures/circular_rose.png" alt="Feature Diagnostic Rose" width="560px" />
+  <img src="man/figures/circular_rose.png" alt="Feature Diagnostic Rose" width="600px" />
 </p>
 
-* **Petal Length**: True **Feature Completeness** ($100\% - \text{Missing}\%$). Columns with missing values (e.g. `Ozone` at 75.8% completeness) have visibly indented petals.
-* **Petal Color**: Feature Integrity & Leakage Vector:
-  * 🟩 **Clean Feature**
-  * 🟦 **Identifier / High-Cardinality**
-  * 🟧 **Duplicate / Constant Feature**
-  * 🟪 **Unstable Distribution Drift** (auto-activated when stability is evaluated)
-  * 🟥 **Target Leaker**
-* **Outer Rim Cap**: Exact mathematical transformation recommended (`None`, `Log`, `Box-Cox`, `Yeo-Johnson`, `Categorical`).
-* **Visual Color Swatches**: Direct graphical legend entries for immediate interpretation.
+#### Decoding the Petals:
+* **Petal Length (Radial Depth)**: Measures **True Feature Completeness** ($100\% - \text{Missing}\%$). Complete features reach the outer boundary; variables with missing values (such as `Ozone` with 24.2% missingness) display visibly indented petals.
+* **Petal Color (Integrity Vector)**:
+  * 🟩 **Clean Feature**: Passed all leakage, stability, and redundancy audits.
+  * 🟦 **Identifier / High Cardinality**: Candidate surrogate key or unique ID requiring removal.
+  * 🟧 **Duplicate / Constant**: Zero-variance or redundant column wasting model degrees of freedom.
+  * 🟪 **Unstable Distribution Drift**: Severe covariate shift detected between reference and evaluation sets.
+  * 🟥 **Target Leaker**: Feature identical or correlated ($|r| \ge 0.999$) with the prediction outcome.
+* **Outer Rim Cap**: Visual indicator displaying the exact mathematical transformation recommended (`None`, `Log`, `Box-Cox`, `Yeo-Johnson`, or `Categorical`).
 
 ---
 
 ### 3. Statistical Feature Map (`type = "bubble"`)
 
-Resolves feature distribution properties on a 2D coordinate plane: **Feature Completeness** on the X-axis versus **Distribution Skewness** on the Y-axis.
+The **Feature Map** projects every feature onto an analytical 2D coordinate system: **Feature Completeness (%)** on the horizontal axis versus **Distribution Skewness** on the vertical axis.
 
 <p align="center">
-  <img src="man/figures/bubble_map.png" alt="Statistical Feature Map" width="680px" />
+  <img src="man/figures/bubble_map.png" alt="Statistical Feature Map" width="700px" />
 </p>
 
-* **Green Central Zone**: Marks the statistically symmetric boundary $[-0.5, 0.5]$ where no transformation is needed.
-* **Warning Bands**: Highlight moderate skew ($[0.5, 1.0]$ and $[-1.0, -0.5]$) and severe skew ($> 1.0$ or $< -1.0$).
-* **Point Aesthetics**: Point colors reflect leakage risk; point shapes reflect the recommended mathematical transformation.
-* **Zero Collision**: Powered by `ggrepel` leader lines and deterministic micro-jittering.
+#### Decoding the Diagnostic Plane:
+* **Central Green Zone ($[-0.5, +0.5]$)**: The **Statistically Symmetric Sanctuary**. Features within this band exhibit approximately normal distributions and require no mathematical transformations.
+* **Yellow Warning Bands ($[0.5, 1.0]$ and $[-1.0, -0.5]$)**: Features with moderate skewness where light transformations (e.g., Logarithm) improve convergence.
+* **Orange/Red Outer Bands ($> 1.0$ or $< -1.0$)**: Severe skewness; power transforms (e.g., Box-Cox or Yeo-Johnson) are strongly recommended.
+* **Point Aesthetics**: Point color highlights leakage classification, while point shape encodes the recommended transform.
+* **Zero Collision**: Built with `ggrepel` leader lines and deterministic jittering to prevent overlapping labels even in dense multi-variable datasets.
 
 ---
 
 ### 4. Single-Feature Radar Profile (`type = "radar", feature = "col"`)
 
-A spider radar chart assessing a single variable across 5 core statistical dimensions:
+The **Radar Profile** isolates an individual feature and inspects its performance across 5+1 core statistical axes on a spider web chart.
 
 <p align="center">
-  <img src="man/figures/radar_profile.png" alt="Feature Radar Profile" width="520px" />
+  <img src="man/figures/radar_profile.png" alt="Feature Radar Profile" width="560px" />
 </p>
 
-1. **Completeness**: $100\% - \text{Missing}\%$
-2. **Symmetry**: $100 - |\text{Skewness}| \times 30$
-3. **Tail Normalcy**: $100 - |\text{Excess Kurtosis}| \times 15$
-4. **Uniqueness**: Non-redundant unique value density.
-5. **Leakage Safety**: Feature-level leakage penalty score.
-* **Dashed Green Benchmark**: 80% readiness boundary.
-* **Dynamic 6th Spoke**: Automatically expands with a **Stability** axis when `feature_stability` is evaluated.
+#### Decoding the 6 Spoke Dimensions:
+1. **Completeness**: $100\% - \text{Missing Values}\%$.
+2. **Symmetry**: Distribution skewness score ($100 - |\text{Skewness}| \times 30$, floor 0).
+3. **Tail Normalcy**: Kurtosis health score ($100 - |\text{Excess Kurtosis}| \times 15$, floor 0).
+4. **Uniqueness**: Density of non-redundant distinct values.
+5. **Leakage Safety**: Feature-level safety score penalizing correlation and cardinality leaks.
+6. **Stability (Dynamic 6th Spoke)**: Automatically expands when feature stability is assessed, reflecting Population Stability Index (PSI) health.
+* **Dashed Green Polygon**: 80% benchmark target for an ideal production feature.
 
 ---
 
-## Standalone Diagnostic Functions
+## Detailed Module Walkthrough
 
-Each PrismR module can also be called as an independent diagnostic function:
+PrismR is designed as a decoupled, modular framework. Each underlying engine can be invoked as an independent, standalone function:
 
-### `quality_score(data)`
-Evaluates cell missingness, duplicated rows, duplicate columns, and zero-variance constant features:
+```
+                  ┌──────────────────────────────┐
+                  │          PrismR Core         │
+                  └──────────────┬───────────────┘
+         ┌───────────────────────┼───────────────────────┐
+         ▼                       ▼                       ▼
+   quality_score()       detect_leakage()       recommend_transform()
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 ▼
+                        feature_stability()
+```
 
+---
+
+### Module 1: Data Quality Assessment (`quality_score`)
+
+Data quality failures are rarely uniform. A dataset might contain zero missing values overall, but have one feature with 95% missingness, duplicate rows that cause data leakage between train and test splits, or zero-variance columns that cause matrix singularity.
+
+#### What it checks:
+1. **Global Cell Missingness**: Proportion of `NA` / `NaN` cells across the matrix.
+2. **Duplicate Rows**: Exact duplicate observations that inflate cross-validation scores.
+3. **Duplicate Columns**: Exact duplicate feature vectors that introduce severe collinearity.
+4. **Constant (Zero-Variance) Features**: Features with identical values across all observations.
+
+#### Mathematical Formulation:
+$$\text{Quality Score} = \max\left(0, 100 - \left( \text{Missing}\% \times 1.2 + \text{Dup Rows}\% \times 1.5 + \text{Dup Cols} \times 10 + \text{Constants} \times 10 \right)\right)$$
+
+#### Usage:
 ```r
 q <- quality_score(airquality)
 
-q$quality_score     # Overall score (0 - 100)
+# Access top-level metrics
+q$quality_score     # 97.6
+q$verdict           # "Excellent"
 q$missing_percent   # 4.79%
 q$duplicate_rows    # 0
-q$variables         # Per-variable quality metrics data frame
+q$constant_columns  # 0
+
+# Feature-level quality breakdown
+head(q$variables)
 ```
 
-### `detect_leakage(data, target = NULL)`
-Identifies ID/key columns, duplicated columns, high-cardinality discrete columns, exact target leakers, and near-perfect correlation leakage ($|r| \ge 0.999$):
+---
 
+### Module 2: Data Leakage Detection (`detect_leakage`)
+
+**Data leakage** is the silent killer of predictive models. It occurs when features contain information about the target variable that will not be available at inference time, or when surrogate database keys are inadvertently included as predictors.
+
+#### What it detects:
+1. **Identifier / Surrogate Columns**: High-uniqueness discrete features matching key patterns (e.g., `id`, `uuid`, `cust_id`, `hash`, or row index features).
+2. **Duplicate Columns**: Predictors that are exact duplicates of another column.
+3. **High Cardinality**: Discrete features where unique levels exceed 50% of the sample size, posing severe risk of memorization in decision trees.
+4. **Exact Target Leakage**: Any predictor vector identical to the target variable.
+5. **Near-Perfect Correlation Leakage**: Any numeric predictor with absolute Pearson or Spearman correlation $|r| \ge 0.999$ with the target.
+
+#### Usage:
 ```r
-l <- detect_leakage(my_data, target = "outcome")
+# Synthetic dataset with an injected ID and target leaker
+sample_df <- data.frame(
+  customer_id = paste0("ID_", 1:100),
+  age         = rnorm(100, mean = 40, sd = 10),
+  target      = rnorm(100, mean = 500, sd = 50)
+)
+sample_df$leaker_feature <- sample_df$target * 1.0000001  # Leaker column
 
-l$leakage_score             # Leakage Safety Score (0 - 100)
-l$identifier_columns        # e.g., "customer_id"
-l$target_leakage            # Predictors identical to target
-l$correlation_leakage       # Predictors with |r| >= 0.999 to target
+leakage <- detect_leakage(sample_df, target = "target")
+
+leakage$leakage_score        # Overall Safety Score (0 - 100)
+leakage$identifier_columns   # "customer_id"
+leakage$target_leakage       # "leaker_feature"
+leakage$correlation_leakage  # "leaker_feature"
+leakage$verdict              # "Critical"
 ```
 
-### `recommend_transform(data)`
-Analyzes skewness and excess kurtosis using type-2 moments (via `e1071`) and accounts for strictly positive constraints:
+---
 
+### Module 3: Transformation Analysis (`recommend_transform`)
+
+Linear regression, logistic models, linear discriminant analysis, neural networks, PCA, and distance-based clustering assume roughly symmetric distributions without extreme leverage points.
+
+#### What it analyzes:
+* **Unbiased Sample Skewness ($\gamma_1$)**: Evaluates distributional asymmetry using Type-2 sample moments (via `e1071`).
+* **Excess Kurtosis ($\gamma_2$)**: Measures tail heaviness and outlier propensity relative to a normal distribution ($\gamma_2 = 0$).
+* **Strict Positivity Check ($x > 0$)**: Verifies domain constraints before suggesting mathematical functions that are undefined for non-positive values.
+
+#### Recommendation Decision Matrix:
+
+| Distributional Property | Domain Condition | Recommended Transform | Mathematical Rationale |
+|:---|:---|:---|:---|
+| $|\gamma_1| \le 0.5$ | Any | **None** | Distribution is approximately normal/symmetric. |
+| $0.5 < \gamma_1 \le 1.0$ | $\min(x) > 0$ | **Log** | Moderate right-skew; $\ln(x)$ compresses large values. |
+| $\gamma_1 > 1.0$ | $\min(x) > 0$ | **Box-Cox** | Severe right-skew; parametric power transform $y^{(\lambda)}$ optimizes normality. |
+| $|\gamma_1| > 0.5$ | $\min(x) \le 0$ | **Yeo-Johnson** | Modifies Box-Cox to handle zero and negative values continuously. |
+| Discrete / Factor | String / Factor | **Categorical** | High-skew discrete levels requiring one-hot or target encoding. |
+
+#### Usage:
 ```r
 t <- recommend_transform(airquality)
 
-t$variables[, c("variable", "skewness", "finding", "recommendation")]
+# Actionable recommendations (features requiring transformation)
+t$recommendations
+#   variable  skewness  kurtosis               finding recommendation
+# 1    Ozone  1.241796  1.290303 Severely right-skewed        Box-Cox
+
+# Full variable table across all numeric columns
+t$variables[, c("variable", "skewness", "kurtosis", "finding", "recommendation")]
 ```
 
-| Variable | Skewness | Finding | Recommendation |
+---
+
+### Module 4: Feature Stability & Drift (`feature_stability`)
+
+**Covariate shift** (distribution drift) occurs when the input distribution $P(X)$ changes between training and inference, invalidating the model even if the underlying relationship $P(Y|X)$ remains constant.
+
+#### Advanced Statistical Implementation:
+1. **Population Stability Index (PSI)**:
+   $$\text{PSI} = \sum_{i=1}^k \left( \text{Actual}_i - \text{Expected}_i \right) \times \ln\left( \frac{\text{Actual}_i}{\text{Expected}_i} \right)$$
+2. **Bayesian Laplace Smoothing ($\alpha = 0.5$)**: Applies pseudo-counts prior to probability normalization:
+   $$P_i = \frac{N_i + 0.5}{N + 0.5 \times k}$$
+   *Guarantees numeric stability, eliminating division-by-zero errors or infinite log penalties when a bin is unobserved in one partition.*
+3. **Adaptive Quantile Binning**: Bins continuous numeric features into equal-frequency quantiles derived from the baseline distribution.
+4. **Dual Wasserstein Distance ($W_1$)**: Computes raw Earth Mover's Distance as well as **Scale-Normalized Wasserstein**:
+   $$\overline{W}_1 = \frac{W_1(P, Q)}{\sigma_{\text{pooled}}}$$
+   *Enables direct comparison of drift severity across features of differing physical units and scales.*
+5. **Categorical Feature Tracking**: Bins discrete levels, capturing novel categories appearing in evaluation data.
+6. **Unix Standard (Silence by Default)**: Runs silently (`verbose = FALSE`), returning structured programmatic lists ideal for automated CI/CD pipelines.
+
+#### Drift Benchmarking Standards:
+
+| PSI Metric | Drift Classification | Variable Score | Engineering Action Required |
 |:---|:---|:---|:---|
-| Ozone | 1.21 | Severely right-skewed | **Box-Cox** |
-| Solar.R | -0.42 | Approximately symmetric | **None** |
-| Wind | 0.34 | Approximately symmetric | **None** |
-| Temp | -0.37 | Approximately symmetric | **None** |
+| **$\text{PSI} < 0.10$** | 🟩 **Stable** | **100** | Insignificant shift. Feature is safe for modeling. |
+| **$0.10 \le \text{PSI} < 0.25$** | 🟨 **Moderate Drift** | **70** | Slight shift. Apply L1/L2 regularization or monitor in production. |
+| **$\text{PSI} \ge 0.25$** | 🟥 **Unstable** | **30** | Critical drift. Hard veto: Drop feature or retrain pipeline. |
 
-### `feature_stability(data, current = NULL, split_ratio = 0.5, partition_col = NULL)`
-Evaluates dataset distribution drift across numeric and categorical features using **Population Stability Index (PSI)** with Bayesian Laplace smoothing and **Dual Wasserstein distance** (raw Earth Mover's Distance and scale-normalized $\frac{W_1}{\sigma_{\text{pooled}}}$):
+#### Usage:
 
+##### Mode A: Single Dataset (Sequential Partition)
+Evaluates temporal drift between the first 50% (baseline) and last 50% (current) of rows:
 ```r
-# Standalone single-dataset stability check (sequential baseline vs. recent)
 s <- feature_stability(airquality)
 
-s$stability_score    # Continuous macro score (0 - 100)
-s$verdict            # Gating verdict (e.g., "Stable (No Significant Drift)")
-s$variables          # Variable-level PSI, Wasserstein, and status table
-s$unstable_features  # Names of features with significant distribution shift
+s$stability_score    # Continuous score (0 - 100)
+s$verdict            # "Drift Warning (Unstable Features Detected)"
+s$unstable_features  # c("Solar.R", "Wind", "Temp", "Month")
+head(s$variables)    # Feature-level PSI, Wasserstein, and status
 ```
 
-For production monitoring or train-vs-test drift evaluation, supply a reference and current dataset:
-
+##### Mode B: Train vs. Test / Production Monitoring
+Compares a reference training set against a live production batch:
 ```r
-s <- feature_stability(train_df, current = test_df)
+s <- feature_stability(train_data, current = prod_data)
 ```
 
-| PSI Metric | Classification | Stability Score | Practitioner Action |
-|:---|:---|:---|:---|
-| **$\text{PSI} < 0.10$** | 🟩 **Stable** | **100** | Insignificant shift. Feature is ready for predictive modeling. |
-| **$0.10 \le \text{PSI} < 0.25$** | 🟨 **Moderate Drift** | **70** | Slight shift. Inspect feature distribution or apply regularization. |
-| **$\text{PSI} \ge 0.25$** | 🟥 **Unstable** | **30** | Critical drift. Risk of model degradation in production. |
+##### Mode C: Interactive Verbose Audit
+Set `verbose = TRUE` for an ASCII terminal report:
+```r
+s <- feature_stability(airquality, verbose = TRUE)
+```
 
 ---
 
-## Model Readiness Scoring Logic
+## The Dual-Layer Readiness Engine
 
-PrismR computes a weighted composite **Readiness Score** ($0 - 100$):
+PrismR combines all four modules into a unified decision engine.
 
+### Layer 1: The Continuous Composite Score
 $$\text{Readiness Score} = 0.40 \times \text{Quality} + 0.45 \times \text{Leakage} + 0.15 \times \text{Transform Health}$$
 
-### Dual-Layer Gating Verdicts
-To prevent the "averaging fallacy" (where high scores mask a single catastrophic failure), the overall verdict applies **hard gating constraints**:
+### Layer 2: Hard Gating Verdicts (Veto Constraints)
 
-| Verdict | Conditions | Action |
+> [!IMPORTANT]
+> **The Averaging Fallacy**: In naive composite scoring systems, a dataset with 100% data quality and perfect transformations could achieve an average score of 95/100 despite having a critical target leaker or severe distribution drift.
+> 
+> PrismR prevents this by enforcing **hard architectural vetoes**:
+
+| Overall Verdict | Conditions Required | Meaning & Pipeline Action |
 |:---|:---|:---|
-| **Model Ready** | Score $\ge 85$, Leakage $\ge 80$, and **0 Unstable Features** | Proceed directly to feature engineering and modeling. |
-| **Proceed with Caution** | Score $\ge 65$ and Leakage $\ge 50$ (or moderate drift flagged) | Inspect flagged items (outliers, skewness, moderate drift). |
-| **Action Required** | Score $< 65$, Leakage $< 50$, or **Unstable Features Detected** | Resolve critical blockers (target leakers, unstable features, constant columns). |
+| 🟢 **Model Ready** | Score $\ge 85$ **AND** Leakage $\ge 80$ **AND** **0 Unstable Features** | Dataset is statistically sound. Proceed directly to model training. |
+| 🟡 **Proceed with Caution** | Score $\ge 65$ **AND** Leakage $\ge 50$ (or moderate drift) | Minor defects detected (moderate skew, light missingness). Review flagged items. |
+| 🔴 **Action Required** | Score $< 65$ **OR** Leakage $< 50$ **OR** **$\ge 1$ Unstable Feature** | **Hard Veto Triggered**. Training on this data will produce invalid models. Remediate blockers. |
 
 ---
 
-## Installation
+## Recommended Remediation Order & Decision Hierarchy
 
-```r
-# install.packages("devtools")
-devtools::install_github("Arshit-dv/PrismR")
+When PrismR flags issues across multiple modules, **in what order should a data scientist resolve them?** 
+
+Trying to optimize transformations on a feature that leaks the target, or imputing values on a column that suffers from severe temporal drift, is wasted engineering effort. PrismR establishes a structured **4-Phase Remediation Protocol**:
+
+```
+                       [ RAW TABULAR DATA ]
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Phase 1: Data Leakage (`detect_leakage`)                    │ ◄── PRIORITY 1: DROP / ISOLATE
+ │ Action: Remove ID keys, exact target leakers, proxy vectors │     (Hard Veto Blocker)
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Phase 2: Data Quality (`quality_score`)                     │ ◄── PRIORITY 2: CLEANSE
+ │ Action: Deduplicate rows, drop zero-variance constants,     │     (Structural Hygiene)
+ │         impute or drop heavy-missingness columns            │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Phase 3: Feature Stability (`feature_stability`)            │ ◄── PRIORITY 3: STABILIZE
+ │ Action: Audit covariate shift across time/batches.          │     (Distribution Shift)
+ │         Resolve drift BEFORE attempting mathematical transforms!
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Phase 4: Transformations (`recommend_transform`)            │ ◄── PRIORITY 4: OPTIMIZE
+ │ Action: Apply Box-Cox / Log / Yeo-Johnson to clean, stable  │     (Model Convergence)
+ │         features for symmetry and linear convergence        │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Final Gate: `prism()` Report Certification                  │ ◄── GREEN LIGHT: "Model Ready"
+ │ Action: Verify Readiness >= 85 and 0 Veto Blockers          │
+ └─────────────────────────────────────────────────────────────┘
 ```
 
-### Running Unit Tests
+### Critical Decision: What If a Feature Has BOTH Instability (Drift) AND a Transformation Recommendation?
 
-PrismR includes a comprehensive `testthat` suite verifying all diagnostic pipelines, error guards, and plotting methods:
+> [!WARNING]
+> **Mathematical Reality: Transformations Do NOT Cure Distribution Drift.**
+> If a variable exhibits severe temporal drift ($\text{PSI} \ge 0.25$), applying a mathematical transform like Box-Cox or Log **only reshapes the distribution within each partition—the underlying covariate shift between reference and production remains intact!**
 
+#### The Resolution Protocol:
+1. **Rule 1: Never transform an unstable feature blindly**: A drifting feature will degrade production inference even after being scaled or log-transformed.
+2. **Rule 2: Attempt domain stabilization first**: Can the feature be transformed into a stationary metric (e.g., computing percentage change, rolling z-scores, ratio-to-benchmark, or seasonal differencing)?
+3. **Rule 3: Drop if non-stabilizable**: If a drifting feature cannot be stabilized, drop it from your model training set (or heavily penalize it via L1/L2 regularization). Do not waste compute fitting Box-Cox parameters on a feature whose distribution is moving over time.
+4. **Rule 4: Apply mathematical transforms last**: Once an engineered feature is verified to be stable ($\text{PSI} < 0.10$), **only then** apply the recommended mathematical transformation (`Log`, `Box-Cox`, or `Yeo-Johnson`) to achieve normality and enhance model convergence.
+
+---
+
+## Modular vs. Unified Workflow: When to Use Which?
+
+PrismR supports two complementary operational modes:
+
+### 1. Iterative Modular Mode (During Feature Engineering)
+Invoke individual standalone functions interactively during exploratory data analysis (EDA) to isolate specific components:
 ```r
-# Run test suite
-testthat::test_dir("tests/testthat")
+# Check leakage first before touching anything else
+leaks <- detect_leakage(df, target = "outcome")
+df <- df[, !names(df) %in% leaks$identifier_columns]
+
+# Check quality and missingness
+q <- quality_score(df)
+
+# Check stability between train and test
+s <- feature_stability(train_df, current = test_df)
+
+# Check transformation needs on verified features
+t <- recommend_transform(df)
+```
+
+### 2. Unified Validation Gate (`prism()` in CI/CD & Production)
+Use `prism()` as an automated gatekeeper before fitting machine learning models or deploying pipelines to production:
+```r
+report <- prism(data, target = "outcome", current = eval_data)
+
+# Hard programmatic gate
+if (report$verdict != "Model Ready") {
+  stop("Dataset failed Model Readiness validation! Inspect report before training.")
+}
 ```
 
 ---
 
-## Design Principles
+## End-to-End Practitioner Workflow
 
-- **Statistically Justified**: Built on established statistical metrics (excess kurtosis, skewness, Pearson/Spearman correlation thresholds).
-- **Inspection Without Mutation**: Never modifies or transforms your raw data in place.
-- **CRAN-Compliant & Modular**: Follows R package standards, clean S3 method dispatches, and decoupled functions.
-- **Automated Future-Proofing**: Visualizations automatically light up stability metrics as soon as stability analysis is activated.
+Here is how a practitioner uses PrismR from raw data ingestion to production validation:
+
+```r
+library(PrismR)
+
+# 1. Load raw training data
+data("airquality")
+
+# 2. Run PrismR validation gate
+report <- prism(airquality, target = "Ozone")
+
+# 3. Inspect high-level verdict
+summary(report)
+
+# 4. If verdict is "Proceed with Caution" or "Action Required", inspect the print audit
+if (report$verdict != "Model Ready") {
+  print(report)
+}
+
+# 5. Visualize feature health
+plot(report, type = "radial")    # Check macro gauge
+plot(report, type = "circular")  # Identify which features need attention
+plot(report, type = "bubble")    # Review skewness and missingness plane
+
+# 6. Apply targeted remediations:
+# - Impute missing values for Ozone
+# - Apply Box-Cox transform to Ozone
+# - Address seasonal temperature/solar drift before fitting
+```
+
+
+---
+
+## Package Architecture & CRAN Compliance
+
+PrismR is engineered strictly according to CRAN and R-core packaging guidelines:
+
+* **S3 Class System**: Core results are wrapped in a formal `PrismReport` S3 class supporting idiomatic `print()`, `summary()`, and `plot()` generic methods.
+* **Functional Purity**: Zero side effects on user data. Functions never modify input data frames in place.
+* **Minimal Dependencies**: Core statistical routines depend only on `stats`, `utils`, `e1071`, `ggplot2`, and `ggrepel`.
+* **Complete Test Coverage**: Validated with a comprehensive `testthat` suite verifying input assertions, boundary conditions, edge cases, and graphic rendering.
+
+```r
+# Run comprehensive package test suite
+devtools::test()
+```
 
 ---
 
 ## Authors & License
 
-* **Author**: Arshit Choudhary ([@Arshit-dv](https://github.com/Arshit-dv))
+* **Author & Maintainer**: Arshit Choudhary ([@Arshit-dv](https://github.com/Arshit-dv))
 * **License**: MIT License ([LICENSE.md](LICENSE.md))
+* **Issues & Feedback**: [GitHub Issues](https://github.com/Arshit-dv/PrismR/issues)

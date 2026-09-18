@@ -5,3 +5,7 @@
 ^Rplots\.pdf$
 ^rides_data\.json$
 ^.*\.db$
+^\.gitignore$
+^README\.md$
+^\.RData$
+^\.Rhistory$

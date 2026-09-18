@@ -9,7 +9,7 @@ feature_stability(
   current = NULL,
   split_ratio = 0.5,
   partition_col = NULL,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ dataset in single-dataset mode. Defaults to 0.5 (first 50\% vs. last 50\%).}
 partitioning in single-dataset mode (e.g. a date or time column).}
 
 \item{verbose}{Logical. If TRUE, prints a human-readable stability
-report. Defaults to TRUE.}
+report. Defaults to FALSE.}
 }
 \value{
 A list containing:

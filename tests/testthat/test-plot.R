@@ -33,3 +33,8 @@ test_that("plot.PrismReport future-proofs stability automatically", {
   expect_s3_class(plot(report, type = "circular"), "ggplot")
   expect_s3_class(plot(report, type = "radar", feature = "Ozone"), "ggplot")
 })
+
+test_that("plot.PrismReport rejects invalid plot types gracefully", {
+  report <- prism(airquality, target = "Ozone")
+  expect_error(plot(report, type = "unsupported_type"), "Invalid plot type")
+})

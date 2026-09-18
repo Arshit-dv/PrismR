@@ -16,7 +16,7 @@
 #' @param partition_col Optional character. Column name to order by before
 #'   partitioning in single-dataset mode (e.g. a date or time column).
 #' @param verbose Logical. If TRUE, prints a human-readable stability
-#'   report. Defaults to TRUE.
+#'   report. Defaults to FALSE.
 #'
 #' @return A list containing:
 #'   \item{stability_score}{Overall stability score from 0 to 100.}
@@ -30,7 +30,7 @@ feature_stability <- function(data,
                               current = NULL,
                               split_ratio = 0.5,
                               partition_col = NULL,
-                              verbose = TRUE) {
+                              verbose = FALSE) {
 
   # ==========================================================
   # Step 1: Input Validation
