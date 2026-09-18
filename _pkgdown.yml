@@ -1,0 +1,33 @@
+url: https://arshit-dv.github.io/PrismR/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  light-switch: true
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/Arshit-dv/PrismR
+      aria-label: GitHub repository
+
+reference:
+  - title: Core Workflow
+    desc: Functions for end-to-end dataset validation and diagnostics reporting.
+    contents:
+      - prism
+      - plot.PrismReport
+      - summary.PrismReport
+      - print.PrismReport
+
+  - title: Statistical Modules
+    desc: Independent audit modules for quality, leakage, transformations, and drift.
+    contents:
+      - quality_score
+      - detect_leakage
+      - recommend_transform
+      - feature_stability

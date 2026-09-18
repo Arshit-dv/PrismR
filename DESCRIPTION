@@ -16,7 +16,8 @@ Description: PrismR introduces a statistical validation layer between
     assessment, leakage detection, transformation analysis, and
     feature stability.
 License: MIT + file LICENSE
-URL: https://github.com/Arshit-dv/PrismR
+URL: https://arshit-dv.github.io/PrismR/,
+    https://github.com/Arshit-dv/PrismR
 BugReports: https://github.com/Arshit-dv/PrismR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
