@@ -1,7 +1,9 @@
 #' Print a PrismReport
 #'
-#' @param x A PrismReport object.
-#' @param ... Additional arguments.
+#' @param x A \code{PrismReport} object returned by \code{\link{prism}}.
+#' @param ... Additional arguments passed to print methods.
+#'
+#' @return Invisibly returns the input \code{PrismReport} object.
 #' @examples
 #' report <- prism(airquality, target = "Ozone")
 #' print(report)

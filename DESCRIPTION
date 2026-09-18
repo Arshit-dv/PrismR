@@ -1,6 +1,6 @@
 Package: PrismR
 Type: Package
-Title: A Statistical Validation Framework for Model Readiness
+Title: A Pre-Modeling Statistical Audit Framework
 Version: 1.0.0
 Authors@R: c(
     person(

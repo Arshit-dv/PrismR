@@ -1,15 +1,31 @@
 #' Perform Complete Prism Statistical Validation
 #'
-#' Evaluates dataset readiness for predictive modeling across
-#' data quality, data leakage, distribution transformations,
-#' and feature stability.
+#' Evaluates dataset readiness for predictive modeling across four foundational
+#' statistical pillars: data quality, data leakage, distribution transformations,
+#' and feature stability. Produces an overall Model Readiness score (0-100) and
+#' a gatekeeping verdict.
+#'
+#' The four evaluation dimensions include:
+#' \itemize{
+#'   \item \strong{Data Quality}: Evaluates missingness, duplicate rows, and constant features.
+#'   \item \strong{Data Leakage}: Identifies identifier keys, duplicate features, high-cardinality columns, and target correlation leakers.
+#'   \item \strong{Transformations}: Evaluates skewness and excess kurtosis to recommend variance-stabilizing transforms (Box-Cox, Yeo-Johnson, Log).
+#'   \item \strong{Feature Stability}: Assesses covariate distribution drift via Population Stability Index (PSI) and Wasserstein distance.
+#' }
 #'
 #' @param data A data.frame to assess.
-#' @param target Optional name of the target variable.
-#' @param current Optional current data.frame to evaluate distribution drift against \code{data}.
+#' @param target Optional character string specifying the name of the target/label variable.
+#' @param current Optional current data.frame to evaluate distribution drift against baseline \code{data}.
 #'
-#' @return A \code{PrismReport} S3 object containing detailed
-#'   validation metrics and readiness verdict.
+#' @return A \code{PrismReport} S3 object containing:
+#' \describe{
+#'   \item{quality}{List of data quality metrics returned by \code{\link{quality_score}}.}
+#'   \item{leakage}{List of data leakage diagnostics returned by \code{\link{detect_leakage}}.}
+#'   \item{transformation}{List of transformation recommendations returned by \code{\link{recommend_transform}}.}
+#'   \item{stability}{List of stability metrics returned by \code{\link{feature_stability}}.}
+#'   \item{readiness}{Overall composite Model Readiness score (0-100).}
+#'   \item{verdict}{Gatekeeping verdict: \code{"Model Ready"}, \code{"Proceed with Caution"}, or \code{"Action Required"}.}
+#' }
 #'
 #' @examples
 #' report <- prism(airquality, target = "Ozone")

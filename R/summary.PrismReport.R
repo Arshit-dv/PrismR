@@ -1,7 +1,9 @@
 #' Summarize a PrismReport
 #'
-#' @param object A PrismReport object.
-#' @param ... Additional arguments.
+#' @param object A \code{PrismReport} object returned by \code{\link{prism}}.
+#' @param ... Additional arguments passed to summary methods.
+#'
+#' @return Invisibly returns the input \code{PrismReport} object.
 #' @examples
 #' report <- prism(airquality, target = "Ozone")
 #' summary(report)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/feature_stability.R
 \name{feature_stability}
 \alias{feature_stability}
-\title{Feature Stability Assessment}
+\title{Feature Stability and Distribution Drift Assessment}
 \usage{
 feature_stability(
   data,
@@ -13,8 +13,8 @@ feature_stability(
 )
 }
 \arguments{
-\item{data}{A data.frame used as the reference dataset (or for single-dataset
-drift evaluation).}
+\item{data}{A data.frame used as the reference baseline dataset (or the full
+dataset for single-dataset drift evaluation).}
 
 \item{current}{Optional current data.frame to compare against \code{data}.}
 
@@ -22,28 +22,44 @@ drift evaluation).}
 dataset in single-dataset mode. Defaults to 0.5 (first 50\% vs. last 50\%).}
 
 \item{partition_col}{Optional character. Column name to order by before
-partitioning in single-dataset mode (e.g. a date or time column).}
+partitioning in single-dataset mode (e.g., a timestamp or sequence ID).}
 
-\item{verbose}{Logical. If TRUE, prints a human-readable stability
+\item{verbose}{Logical. If TRUE, prints a formatted console stability
 report. Defaults to FALSE.}
 }
 \value{
 A list containing:
+\describe{
 \item{stability_score}{Overall stability score from 0 to 100.}
-\item{variables}{Feature-level PSI, Wasserstein distance,
-stability score and status.}
-\item{unstable_features}{Character vector of unstable feature names.}
-\item{method}{Assessment method used.}
+\item{verdict}{Categorical stability verdict: \code{"Stable"}, \code{"Moderate Drift"}, or \code{"Unstable"}.}
+\item{variables}{A data frame of feature-level diagnostics containing \code{variable}, \code{type}, \code{psi}, \code{wasserstein}, \code{stability_score}, and \code{status}.}
+\item{unstable_features}{Character vector of features flagged with severe drift (PSI >= 0.25).}
+\item{moderate_features}{Character vector of features flagged with moderate drift (0.10 <= PSI < 0.25).}
+\item{stable_features}{Character vector of features exhibiting stable distributions (PSI < 0.10).}
+\item{method}{Character string describing the assessment method used (\code{"two_sample_comparison"} or \code{"sequential_partition"}).}
+}
 }
 \description{
-Evaluates feature distribution drift using Population Stability Index
-(PSI) and Wasserstein distance across numeric and categorical features.
+Evaluates feature distribution drift between reference and current datasets
+(or across sequential time partitions of a single dataset) using the
+Population Stability Index (PSI) and scale-normalized Wasserstein distance
+across both numeric and categorical variables.
 }
 \details{
+Feature drift is evaluated using standard industry thresholds:
+\itemize{
+\item \strong{Stable (PSI < 0.10)}: Insignificant distributional shift.
+\item \strong{Moderate Drift (0.10 <= PSI < 0.25)}: Noticeable shift; monitoring recommended.
+\item \strong{Unstable / Severe Drift (PSI >= 0.25)}: Severe distributional divergence; retraining or feature review required.
+}
+
+For categorical variables and discrete bins, Bayesian Laplace smoothing is applied
+to prevent division-by-zero errors when frequencies are zero in one partition.
+
 If only one dataset is supplied, the function performs a sequential
-partition-based stability assessment (comparing the first half to the
-second half of observations). For real-world monitoring, users should
-provide reference and current datasets separately.
+partition-based stability assessment (comparing the first partition to the
+second partition of observations). For production monitoring, users should
+provide reference and current datasets separately via \code{data} and \code{current}.
 }
 \examples{
 # Single-dataset sequential drift evaluation

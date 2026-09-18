@@ -9,18 +9,35 @@ prism(data, target = NULL, current = NULL)
 \arguments{
 \item{data}{A data.frame to assess.}
 
-\item{target}{Optional name of the target variable.}
+\item{target}{Optional character string specifying the name of the target/label variable.}
 
-\item{current}{Optional current data.frame to evaluate distribution drift against \code{data}.}
+\item{current}{Optional current data.frame to evaluate distribution drift against baseline \code{data}.}
 }
 \value{
-A \code{PrismReport} S3 object containing detailed
-validation metrics and readiness verdict.
+A \code{PrismReport} S3 object containing:
+\describe{
+\item{quality}{List of data quality metrics returned by \code{\link{quality_score}}.}
+\item{leakage}{List of data leakage diagnostics returned by \code{\link{detect_leakage}}.}
+\item{transformation}{List of transformation recommendations returned by \code{\link{recommend_transform}}.}
+\item{stability}{List of stability metrics returned by \code{\link{feature_stability}}.}
+\item{readiness}{Overall composite Model Readiness score (0-100).}
+\item{verdict}{Gatekeeping verdict: \code{"Model Ready"}, \code{"Proceed with Caution"}, or \code{"Action Required"}.}
+}
 }
 \description{
-Evaluates dataset readiness for predictive modeling across
-data quality, data leakage, distribution transformations,
-and feature stability.
+Evaluates dataset readiness for predictive modeling across four foundational
+statistical pillars: data quality, data leakage, distribution transformations,
+and feature stability. Produces an overall Model Readiness score (0-100) and
+a gatekeeping verdict.
+}
+\details{
+The four evaluation dimensions include:
+\itemize{
+\item \strong{Data Quality}: Evaluates missingness, duplicate rows, and constant features.
+\item \strong{Data Leakage}: Identifies identifier keys, duplicate features, high-cardinality columns, and target correlation leakers.
+\item \strong{Transformations}: Evaluates skewness and excess kurtosis to recommend variance-stabilizing transforms (Box-Cox, Yeo-Johnson, Log).
+\item \strong{Feature Stability}: Assesses covariate distribution drift via Population Stability Index (PSI) and Wasserstein distance.
+}
 }
 \examples{
 report <- prism(airquality, target = "Ozone")

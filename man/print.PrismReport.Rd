@@ -7,9 +7,12 @@
 \method{print}{PrismReport}(x, ...)
 }
 \arguments{
-\item{x}{A PrismReport object.}
+\item{x}{A \code{PrismReport} object returned by \code{\link{prism}}.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments passed to print methods.}
+}
+\value{
+Invisibly returns the input \code{PrismReport} object.
 }
 \description{
 Print a PrismReport

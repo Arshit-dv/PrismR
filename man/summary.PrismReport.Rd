@@ -7,9 +7,12 @@
 \method{summary}{PrismReport}(object, ...)
 }
 \arguments{
-\item{object}{A PrismReport object.}
+\item{object}{A \code{PrismReport} object returned by \code{\link{prism}}.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments passed to summary methods.}
+}
+\value{
+Invisibly returns the input \code{PrismReport} object.
 }
 \description{
 Summarize a PrismReport
