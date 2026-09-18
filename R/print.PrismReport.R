@@ -285,7 +285,7 @@ print.PrismReport <- function(x, ...) {
         cat("----------------------------------\n")
         for (feat in unst_feats) {
           sub_r <- stab_df[stab_df$variable == feat, ]
-          cat(sprintf("• %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
+          cat(sprintf("\u2022 %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
         }
       }
 
@@ -294,7 +294,7 @@ print.PrismReport <- function(x, ...) {
         cat("--------------\n")
         for (feat in mod_feats) {
           sub_r <- stab_df[stab_df$variable == feat, ]
-          cat(sprintf("• %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
+          cat(sprintf("\u2022 %-20s (PSI: %.4f)\n", feat, sub_r$psi[1]))
         }
       }
 

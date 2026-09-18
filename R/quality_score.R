@@ -12,7 +12,7 @@
 #'   \item{duplicate_rows}{Number of duplicated rows.}
 #'   \item{constant_columns}{Names of constant columns.}
 #'   \item{n_constant_columns}{Number of constant columns.}
-#'   \item{quality_score}{Overall quality score (0–100).}
+#'   \item{quality_score}{Overall quality score (0-100).}
 #'   \item{variables}{A data frame containing variable-level quality metrics,
 #'   including missing percentage, constant feature indicator, and quality score.}
 #' }
@@ -93,9 +93,9 @@ quality_score <- function(data) {
   # Starting score : 100
   #
   # Penalties
-  #   • Missing values      : 50%
-  #   • Duplicate rows      : 30%
-  #   • Constant features   : 20%
+  #   - Missing values      : 50%
+  #   - Duplicate rows      : 30%
+  #   - Constant features   : 20%
   #
   # Final score is bounded between 0 and 100.
   # ==========================================================

@@ -86,7 +86,7 @@ summary.PrismReport <- function(object, ...) {
 
   if (object$transformation$n_recommended == 0) {
 
-    cat("✓ No feature transformations recommended.\n")
+    cat("\u2713 No feature transformations recommended.\n")
 
   } else {
 
@@ -105,9 +105,9 @@ summary.PrismReport <- function(object, ...) {
     apply(rec, 1, function(x) {
 
       cat(
-        "• ",
+        "\u2022 ",
         x["variable"],
-        " → ",
+        " -> ",
         x["recommendation"],
         "\n",
         sep = ""
@@ -148,21 +148,21 @@ summary.PrismReport <- function(object, ...) {
       cat("Unstable Features       : ", length(unst_feats), "\n", sep = "")
 
       if (length(unst_feats) > 0) {
-        cat("\n⚠ Unstable Features:\n")
+        cat("\n\u26A0 Unstable Features:\n")
         for (feat in unst_feats) {
-          cat("• ", feat, "\n", sep = "")
+          cat("\u2022 ", feat, "\n", sep = "")
         }
       }
 
       if (length(mod_feats) > 0) {
         cat("\nModerate Drift:\n")
         for (feat in mod_feats) {
-          cat("• ", feat, "\n", sep = "")
+          cat("\u2022 ", feat, "\n", sep = "")
         }
       }
 
       if (length(unst_feats) == 0 && length(mod_feats) == 0) {
-        cat("\n✓ No unstable features detected.\n")
+        cat("\n\u2713 No unstable features detected.\n")
       }
     }
   }

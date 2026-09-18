@@ -483,9 +483,9 @@ feature_stability <- function(data,
       cat("----------------------------------------------------\n")
       for (feat in unstable_features) {
         sub_row <- variables[variables$variable == feat, ]
-        cat(sprintf("• %s [%s] — PSI: %.4f\n", feat, sub_row$type, sub_row$psi))
+        cat(sprintf("\u2022 %s [%s] -- PSI: %.4f\n", feat, sub_row$type, sub_row$psi))
       }
-      cat("\n⚠ These features show significant distribution shift.\n")
+      cat("\n\u26A0 These features show significant distribution shift.\n")
       cat("  Feeding them into models risks severe production degradation.\n\n")
     }
 
@@ -498,7 +498,7 @@ feature_stability <- function(data,
       cat("----------------------------------------------------\n")
       for (feat in moderate_features) {
         sub_row <- variables[variables$variable == feat, ]
-        cat(sprintf("• %s [%s] — PSI: %.4f\n", feat, sub_row$type, sub_row$psi))
+        cat(sprintf("\u2022 %s [%s] -- PSI: %.4f\n", feat, sub_row$type, sub_row$psi))
       }
       cat("\n")
     }
@@ -507,7 +507,7 @@ feature_stability <- function(data,
     # Stable Features Summary
     # --------------------------------------------------------
     if (length(unstable_features) == 0 && length(moderate_features) == 0) {
-      cat("✓ All evaluated features are stable across partitions.\n\n")
+      cat("\u2713 All evaluated features are stable across partitions.\n\n")
     }
 
     # --------------------------------------------------------

@@ -51,8 +51,8 @@ detect_leakage <- function(data, target = NULL) {
   # Identifier Column Assessment
   #
   # A column is considered an identifier if:
-  #   • its name contains id, key, uuid, or guid
-  #   • OR it is an integer/character/factor column where
+  #   - its name contains id, key, uuid, or guid
+  #   - OR it is an integer/character/factor column where
   #     at least 99% of non-missing values are unique.
   # ==========================================================
   identifier_columns <- names(data)[
@@ -116,8 +116,8 @@ detect_leakage <- function(data, target = NULL) {
   # High Cardinality Assessment
   #
   # A column is considered high-cardinality if:
-  #   • it is a character, factor, or integer-like numeric column
-  #   • AND more than 95% of its non-missing values are unique.
+  #   - it is a character, factor, or integer-like numeric column
+  #   - AND more than 95% of its non-missing values are unique.
   # ==========================================================
   high_cardinality_columns <- names(data)[
     sapply(data, function(x) {
@@ -222,11 +222,11 @@ detect_leakage <- function(data, target = NULL) {
   # Starting score : 100
   #
   # Penalties
-  #   • Identifier columns      : 25%
-  #   • Duplicate columns       : 20%
-  #   • High-cardinality        : 20%
-  #   • Target leakage          : 20%
-  #   • Correlation leakage     : 15%
+  #   - Identifier columns      : 25%
+  #   - Duplicate columns       : 20%
+  #   - High-cardinality        : 20%
+  #   - Target leakage          : 20%
+  #   - Correlation leakage     : 15%
   #
   # Final score is bounded between 0 and 100.
   # ==========================================================
