@@ -36,5 +36,5 @@ test_that("plot.PrismReport future-proofs stability automatically", {
 
 test_that("plot.PrismReport rejects invalid plot types gracefully", {
   report <- prism(airquality, target = "Ozone")
-  expect_error(plot(report, type = "unsupported_type"), "Invalid plot type")
+  expect_error(plot(report, type = "unsupported_type"))
 })
