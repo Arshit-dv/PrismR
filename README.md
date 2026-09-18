@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Arshit-dv/PrismR/actions"><img src="https://img.shields.io/badge/R_CMD_check-passing-brightgreen.svg" alt="R-CMD-check status" /></a>
+  <a href="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check" /></a>
   <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/CRAN-v0.1.0-blue.svg" alt="CRAN status" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Lifecycle-Stable-green.svg" alt="Lifecycle: Stable" /></a>
@@ -124,12 +124,19 @@ Feature Stability
 -----------------------------------------
 Overall Stability Score : 43.3/100
 Stability Verdict       : Drift Warning (Unstable Features Detected)
-Evaluated Features      : 6
-Stable Features         : 1
-Moderate Drift          : 1
+Stable Features         : 0
+Moderate Drift          : 2
 Unstable Features       : 4
 
-⚠ Unstable features detected (seasonal weather shift across months).
+⚠ Unstable Features:
+• Solar.R
+• Wind
+• Temp
+• Month
+
+Moderate Drift:
+• Ozone
+• Day
 ```
 
 ### Deep Forensic Audit: `print(report)`
@@ -195,17 +202,21 @@ Overall Stability Score : 43.3 /100
 Verdict                 : Drift Warning (Unstable Features Detected)
 
 Evaluated Features      : 6
-Stable Features         : 1
-Moderate Drift          : 1
+Stable Features         : 0
+Moderate Drift          : 2
 Unstable Features       : 4
 
-• Solar.R [Numeric] — PSI: 0.3718 (Unstable)
-• Wind [Numeric]    — PSI: 0.2610 (Unstable)
-• Temp [Numeric]    — PSI: 0.5042 (Unstable)
-• Month [Numeric]   — PSI: 5.0878 (Unstable)
+Unstable Features (Drift Detected)
+----------------------------------
+• Solar.R              (PSI: 0.3718)
+• Wind                 (PSI: 0.2610)
+• Temp                 (PSI: 0.5042)
+• Month                (PSI: 5.0878)
 
-⚠ Unstable distribution shift detected between seasonal partitions.
-
+Moderate Drift
+--------------
+• Ozone                (PSI: 0.1691)
+• Day                  (PSI: 0.1118)
 ```
 
 ---
@@ -334,18 +345,18 @@ Data quality failures are rarely uniform. A dataset might contain zero missing v
 4. **Constant (Zero-Variance) Features**: Features with identical values across all observations.
 
 #### Mathematical Formulation:
-$$\text{Quality Score} = \max\left(0, 100 - \left( \text{Missing}\% \times 1.2 + \text{Dup Rows}\% \times 1.5 + \text{Dup Cols} \times 10 + \text{Constants} \times 10 \right)\right)$$
+$$\text{Quality Score} = \max\left(0, 100 - \left(0.50 \times \text{Missing}\% + 0.30 \times \text{Duplicate Rows}\% + 0.20 \times \text{Constant Cols}\%\right)\right)$$
 
 #### Usage:
 ```r
 q <- quality_score(airquality)
 
 # Access top-level metrics
-q$quality_score     # 97.6
-q$verdict           # "Excellent"
-q$missing_percent   # 4.79%
-q$duplicate_rows    # 0
-q$constant_columns  # 0
+q$quality_score       # 97.6 / 100
+q$missing_percent     # 4.79 %
+q$duplicate_rows      # 0
+q$constant_columns    # character(0)
+q$n_constant_columns  # 0
 
 # Feature-level quality breakdown
 head(q$variables)
@@ -364,6 +375,9 @@ head(q$variables)
 4. **Exact Target Leakage**: Any predictor vector identical to the target variable.
 5. **Near-Perfect Correlation Leakage**: Any numeric predictor with absolute Pearson or Spearman correlation $|r| \ge 0.999$ with the target.
 
+#### Mathematical Penalty Formulation:
+$$\text{Leakage Score} = \max\left(0, 100 - \left(\frac{N_{\text{id}}}{N_{\text{cols}}} \times 25 + \frac{N_{\text{dup}}}{N_{\text{cols}}} \times 20 + \frac{N_{\text{card}}}{N_{\text{cols}}} \times 20 + 20 \times \mathbb{I}_{\text{target}} + 15 \times \mathbb{I}_{\text{corr}}\right)\right)$$
+
 #### Usage:
 ```r
 # Synthetic dataset with an injected ID and target leaker
@@ -380,7 +394,7 @@ leakage$leakage_score        # Overall Safety Score (0 - 100)
 leakage$identifier_columns   # "customer_id"
 leakage$target_leakage       # "leaker_feature"
 leakage$correlation_leakage  # "leaker_feature"
-leakage$verdict              # "Critical"
+leakage$variables            # Feature-level leakage diagnostic table
 ```
 
 ---
