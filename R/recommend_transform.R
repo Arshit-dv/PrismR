@@ -284,7 +284,7 @@ recommend_transform <- function(data) {
   #----------------------------------------------------------
 
   if (!is.data.frame(data)) {
-    stop("'data' must be a data.frame.")
+    stop("`data` must be a data.frame.")
   }
 
   #----------------------------------------------------------

@@ -17,5 +17,5 @@ Print a PrismReport
 \examples{
 report <- prism(airquality, target = "Ozone")
 print(report)
-}
 
+}

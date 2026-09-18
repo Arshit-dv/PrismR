@@ -30,7 +30,8 @@ report. Defaults to FALSE.}
 \value{
 A list containing:
 \item{stability_score}{Overall stability score from 0 to 100.}
-\item{variables}{Feature-level PSI, Wasserstein distance, stability score and status.}
+\item{variables}{Feature-level PSI, Wasserstein distance,
+stability score and status.}
 \item{unstable_features}{Character vector of unstable feature names.}
 \item{method}{Assessment method used.}
 }
@@ -55,5 +56,5 @@ ref <- data.frame(val = rnorm(100, 0, 1))
 cur <- data.frame(val = rnorm(100, 2, 1))
 res2 <- feature_stability(ref, current = cur)
 res2$verdict
-}
 
+}

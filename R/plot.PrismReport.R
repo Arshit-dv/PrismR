@@ -10,7 +10,8 @@ if (getRversion() >= "2.15.1") {
       "x", "y", "xend", "yend", "xmin", "xmax", "ymin", "ymax",
       "group", "fill", "color", "label", "angle", "hjust", "vjust",
       "alpha", "petal_color", "rim_color", "score", "axis", "dimension",
-      "value", "pct", "status", "stability_score", "stability_status"
+      "value", "pct", "status", "stability_score", "stability_status",
+      "label_pct", "trans_tier", "ring", "tick"
     )
   )
 }
@@ -929,6 +930,7 @@ plot_radar <- function(x, feature) {
 #'
 #' @param x A \code{PrismReport} object returned by
 #'   \code{\link{prism}}.
+#' @param y Ignored; included for compatibility with generic plot.
 #' @param type Character string specifying the plot to
 #'   display. One of \code{"radial"}, \code{"circular"},
 #'   \code{"bubble"}, or \code{"radar"}.
@@ -950,6 +952,7 @@ plot_radar <- function(x, feature) {
 #' plot(report, type = "radar", feature = "Solar.R")
 #' }
 #'
+#' @importFrom graphics plot
 #' @export
 plot.PrismReport <- function(
     x,

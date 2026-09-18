@@ -59,5 +59,5 @@ test_that("prism operates without a target column", {
   df <- data.frame(a = rnorm(30), b = rlnorm(30))
   report <- prism(df)
   expect_s3_class(report, "PrismReport")
-  expect_null(report$leakage$target)
+  expect_equal(length(report$leakage$target_leakage), 0)
 })

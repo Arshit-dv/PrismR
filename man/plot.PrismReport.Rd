@@ -4,13 +4,19 @@
 \alias{plot.PrismReport}
 \title{Plot a Prism Report}
 \usage{
-\method{plot}{PrismReport}(x, y = NULL, type = c("radial", "circular", "bubble", "radar"), feature = NULL, ...)
+\method{plot}{PrismReport}(
+  x,
+  y = NULL,
+  type = c("radial", "circular", "bubble", "radar"),
+  feature = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{PrismReport} object returned by
 \code{\link{prism}}.}
 
-\item{y}{Ignored. Reserved for S3 generic compatibility with \code{\link[graphics]{plot}}.}
+\item{y}{Ignored; included for compatibility with generic plot.}
 
 \item{type}{Character string specifying the plot to
 display. One of \code{"radial"}, \code{"circular"},

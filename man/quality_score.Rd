@@ -30,5 +30,5 @@ overall quality score.
 res <- quality_score(airquality)
 res$quality_score
 res$missing_percent
-}
 
+}

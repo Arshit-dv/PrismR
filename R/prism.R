@@ -16,6 +16,9 @@
 #' print(report)
 #' summary(report)
 #'
+#' @importFrom stats complete.cases cor quantile sd var
+#' @importFrom utils globalVariables
+#'
 #' @export
 prism <- function(data, target = NULL, current = NULL) {
 
