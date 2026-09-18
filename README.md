@@ -1,11 +1,12 @@
 # PrismR
 
 <p align="center">
-  <strong>A Statistical Validation Framework for Evaluating Dataset Readiness Before Predictive Modelling</strong>
+  <strong>A Pre-Modeling Statistical Audit Framework for Evaluating Dataset Readiness Before Predictive Modeling</strong>
 </p>
 
 <p align="center">
   <a href="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/Arshit-dv/PrismR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check" /></a>
+  <a href="https://arshit-dv.github.io/PrismR/"><img src="https://img.shields.io/badge/docs-pkgdown-blue.svg" alt="Documentation" /></a>
   <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/CRAN-v1.0.0-blue.svg" alt="CRAN status" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://github.com/Arshit-dv/PrismR"><img src="https://img.shields.io/badge/Lifecycle-Stable-green.svg" alt="Lifecycle: Stable" /></a>
@@ -80,8 +81,12 @@ Similarly, **PrismR does not mutate or alter your dataset**. Instead, it passes 
 
 ## Installation
 
-You can install the official release of **PrismR** from GitHub:
+### From CRAN (Official Release)
+```r
+install.packages("PrismR")
+```
 
+### From GitHub (Development & Latest Release)
 ```r
 # Install using remotes (recommended)
 install.packages("remotes")
@@ -90,10 +95,6 @@ remotes::install_github("Arshit-dv/PrismR")
 # Or using pak (fastest)
 install.packages("pak")
 pak::pkg_install("Arshit-dv/PrismR")
-
-# Or using devtools
-install.packages("devtools")
-devtools::install_github("Arshit-dv/PrismR")
 ```
 
 ---
@@ -666,6 +667,24 @@ PrismR is engineered strictly according to CRAN and R-core packaging guidelines:
 # Run comprehensive package test suite
 devtools::test()
 ```
+
+---
+
+## Technical & Engineering Highlights
+
+PrismR combines rigorous statistical methodology with production-grade engineering:
+
+* **Core Innovation**: Conceptualized, designed, and implemented **Model Readiness**—an automated statistical validation layer bridging the gap between raw data preprocessing and machine learning model training.
+* **Statistical Algorithms**:
+  * **Distribution Diagnostics**: Implemented higher-order sample moments ($G_1$ unbiased sample skewness, $G_2$ excess kurtosis) with automated parameter bounds for Box-Cox, Yeo-Johnson, and Log transform recommendations.
+  * **Covariate Drift**: Engineered multi-vector distribution drift detection utilizing **Population Stability Index (PSI)** with Bayesian Laplace smoothing and 1D **Wasserstein Distance** ($\mathcal{W}_1$) with IQR scale-normalization.
+  * **Leakage Detection**: Built multi-stage leakage detection algorithms identifying surrogate identifiers (high-entropy/cardinality heuristics), duplicate feature hashes, and bivariate Pearson correlations ($|r| \ge 0.999$).
+* **Decision Gatekeeping**: Designed a dual-layer scoring matrix combining a 0–100 composite health score ($0.40 \cdot \text{Quality} + 0.45 \cdot \text{Leakage} + 0.15 \cdot \text{Transform}$) with non-compensatory hard veto triggers (blocking models on severe drift or target leakers).
+* **Visualization Engineering**: Developed 4 specialized `ggplot2` diagnostic visualizations (`radial` macro gauge, `circular` diagnostic rose, `bubble` skewness map, `radar` dimensional profile).
+* **Production CI/CD & Testing**:
+  * Built a 99-test suite with **100% test coverage** via `testthat`.
+  * Configured GitHub Actions CI across a 5-platform matrix (Ubuntu release/devel/oldrel, macOS release, Windows release) achieving **0 errors, 0 warnings, and 0 notes** under strict `R CMD check --as-cran`.
+  * Automated documentation deployment with **`pkgdown`** and Bootstrap 5 hosted via GitHub Pages.
 
 ---
 
