@@ -44,3 +44,16 @@ partition-based stability assessment (comparing the first half to the
 second half of observations). For real-world monitoring, users should
 provide reference and current datasets separately.
 }
+\examples{
+# Single-dataset sequential drift evaluation
+res <- feature_stability(airquality)
+res$stability_score
+res$verdict
+
+# Comparing reference baseline vs current dataset
+ref <- data.frame(val = rnorm(100, 0, 1))
+cur <- data.frame(val = rnorm(100, 2, 1))
+res2 <- feature_stability(ref, current = cur)
+res2$verdict
+}
+

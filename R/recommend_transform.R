@@ -35,6 +35,8 @@
 # Analyse a Single Variable
 #============================================================
 
+#' Analyse a single variable for transformations
+#' @noRd
 recommend_one_variable <- function(x) {
 
   #----------------------------------------------------------

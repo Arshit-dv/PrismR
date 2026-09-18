@@ -26,3 +26,9 @@ Computes basic data quality metrics for a dataset, including
 missing values, duplicate rows, constant columns, and an
 overall quality score.
 }
+\examples{
+res <- quality_score(airquality)
+res$quality_score
+res$missing_percent
+}
+

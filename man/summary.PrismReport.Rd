@@ -14,3 +14,8 @@
 \description{
 Summarize a PrismReport
 }
+\examples{
+report <- prism(airquality, target = "Ozone")
+summary(report)
+}
+

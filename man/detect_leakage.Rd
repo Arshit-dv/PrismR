@@ -35,3 +35,14 @@ The assessment includes identifier columns, duplicate columns,
 high-cardinality features, predictors identical to the target,
 and predictors showing an almost perfect correlation with the target.
 }
+\examples{
+# Supervised leakage detection
+res <- detect_leakage(airquality, target = "Ozone")
+res$leakage_score
+res$correlation_leakage
+
+# Unsupervised check for IDs and duplicates
+res_unsupervised <- detect_leakage(iris)
+res_unsupervised$identifier_columns
+}
+

@@ -25,6 +25,16 @@
 #'   }
 #' }
 #'
+#' @examples
+#' # Supervised leakage detection
+#' res <- detect_leakage(airquality, target = "Ozone")
+#' res$leakage_score
+#' res$correlation_leakage
+#'
+#' # Unsupervised check for IDs and duplicates
+#' res_unsupervised <- detect_leakage(iris)
+#' res_unsupervised$identifier_columns
+#'
 #' @export
 detect_leakage <- function(data, target = NULL) {
 

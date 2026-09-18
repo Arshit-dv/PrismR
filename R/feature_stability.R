@@ -25,6 +25,18 @@
 #'   \item{unstable_features}{Character vector of unstable feature names.}
 #'   \item{method}{Assessment method used.}
 #'
+#' @examples
+#' # Single-dataset sequential drift evaluation
+#' res <- feature_stability(airquality)
+#' res$stability_score
+#' res$verdict
+#'
+#' # Comparing reference baseline vs current dataset
+#' ref <- data.frame(val = rnorm(100, 0, 1))
+#' cur <- data.frame(val = rnorm(100, 2, 1))
+#' res2 <- feature_stability(ref, current = cur)
+#' res2$verdict
+#'
 #' @export
 feature_stability <- function(data,
                               current = NULL,
@@ -134,7 +146,7 @@ feature_stability <- function(data,
   }
 
   # ==========================================================
-  # Step 4: Robust PSI Engines (Numeric & Categorical)
+  # Step 3: Robust PSI Engines (Numeric & Categorical)
   # ==========================================================
 
   calculate_numeric_psi <- function(reference, current) {
@@ -219,7 +231,7 @@ feature_stability <- function(data,
   }
 
   # ==========================================================
-  # Step 5: Dual Wasserstein Distance (Raw & Normalized)
+  # Step 4: Dual Wasserstein Distance (Raw & Normalized)
   # ==========================================================
 
   calculate_wasserstein <- function(reference, current) {
@@ -273,7 +285,7 @@ feature_stability <- function(data,
   }
 
   # ==========================================================
-  # Step 3: Feature Detection (Numeric & Categorical)
+  # Step 5: Feature Detection (Numeric & Categorical)
   # ==========================================================
 
   numeric_features <- names(data)[

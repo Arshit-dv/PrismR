@@ -2,6 +2,9 @@
 #'
 #' @param object A PrismReport object.
 #' @param ... Additional arguments.
+#' @examples
+#' report <- prism(airquality, target = "Ozone")
+#' summary(report)
 #'
 #' @export
 summary.PrismReport <- function(object, ...) {

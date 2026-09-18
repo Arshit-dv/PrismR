@@ -1,3 +1,5 @@
+#' Construct a PrismReport object
+#' @noRd
 new_PrismReport <- function(
   quality,
   leakage,

@@ -17,6 +17,11 @@
 #'   including missing percentage, constant feature indicator, and quality score.}
 #' }
 #'
+#' @examples
+#' res <- quality_score(airquality)
+#' res$quality_score
+#' res$missing_percent
+#'
 #' @export
 quality_score <- function(data) {
 
@@ -54,40 +59,7 @@ quality_score <- function(data) {
     } else {
       (duplicate_rows / n_rows) * 100
     }
-  # ==========================================================
-  # Duplicate Column Assessment
-  # ==========================================================
-  duplicate_columns <- character(0)
 
-  if (n_cols > 1) {
-
-    for (i in seq_len(n_cols - 1)) {
-
-      for (j in (i + 1):n_cols) {
-
-        if (identical(data[[i]], data[[j]])) {
-          duplicate_columns <- c(
-            duplicate_columns,
-            names(data)[j]
-          )
-        }
-
-      }
-
-    }
-
-  }
-
-  duplicate_columns <- unique(duplicate_columns)
-
-  n_duplicate_columns <- length(duplicate_columns)
-
-  duplicate_column_percent <-
-    if (n_cols == 0) {
-      0
-    } else {
-      (n_duplicate_columns / n_cols) * 100
-    }
   # ==========================================================
   # Constant Feature Assessment
   # A constant feature contains only one unique non-missing value.
