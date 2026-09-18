@@ -21,6 +21,7 @@ BugReports: https://github.com/Arshit-dv/PrismR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:
+    graphics,
     stats,
     utils,
     e1071,

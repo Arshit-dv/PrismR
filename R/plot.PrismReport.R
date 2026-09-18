@@ -953,6 +953,7 @@ plot_radar <- function(x, feature) {
 #' @export
 plot.PrismReport <- function(
     x,
+    y = NULL,
     type = c(
       "radial",
       "circular",
