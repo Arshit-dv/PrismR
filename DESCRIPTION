@@ -10,11 +10,10 @@ Authors@R: c(
       email = "arshitchoudhary3010@gmail.com"
     )
   )
-Description: PrismR introduces a statistical validation layer between
-    data preprocessing and predictive modeling. It evaluates the
-    statistical readiness of tabular datasets through data quality
-    assessment, leakage detection, transformation analysis, and
-    feature stability.
+Description: Introduces a statistical validation layer between data
+    preprocessing and predictive modeling. Evaluates the statistical
+    readiness of tabular datasets through data quality assessment,
+    leakage detection, transformation analysis, and feature stability.
 License: MIT + file LICENSE
 URL: https://arshit-dv.github.io/PrismR/,
     https://github.com/Arshit-dv/PrismR
